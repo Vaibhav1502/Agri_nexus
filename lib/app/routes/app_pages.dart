@@ -1,3 +1,4 @@
+import 'package:agri_nexus_ht/app/data/models/role_selection/role_selection_view.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_view.dart';
 import 'package:agri_nexus_ht/app/modules/home/category_detail_view.dart';
 import 'package:agri_nexus_ht/app/modules/home/home_view.dart';
@@ -12,6 +13,7 @@ class AppRoutes {
   static const splash = '/splash';
   static const login = '/login';
   static const register = '/register';
+  static const roleSelection = '/role-selection';
   static const home = '/home';
   static const productDetail = '/product-detail';
   static const categoryDetail = '/category-detail';
@@ -21,6 +23,7 @@ class AppRoutes {
 class AppPages {
   static final pages = [
     GetPage(name: AppRoutes.splash, page: () => SplashView()),
+     GetPage(name: AppRoutes.roleSelection, page: () => const RoleSelectionView()),
     GetPage(name: AppRoutes.login, page: () => LoginView()),
     GetPage(name: AppRoutes.register, page: () => RegisterView()),
     GetPage(name: AppRoutes.home, page: () => MainHomeView()),

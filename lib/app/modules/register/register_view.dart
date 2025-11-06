@@ -11,12 +11,14 @@ class RegisterView extends StatelessWidget {
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
-  final role = "customer".obs;
+  //final role = "customer".obs;
 
   RegisterView({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+     final String role = Get.arguments as String? ?? 'customer'; 
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -102,24 +104,24 @@ class RegisterView extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 15),
-                        DropdownButtonFormField<String>(
-                          value: role.value,
-                          items: const [
-                            DropdownMenuItem(
-                              value: "customer",
-                              child: Text("Customer"),
-                            ),
-                            DropdownMenuItem(
-                              value: "dealer",
-                              child: Text("Dealer"),
-                            ),
-                          ],
-                          onChanged: (val) => role.value = val!,
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.person_pin_circle_outlined),
-                            hintText: "Select Role",
-                          ),
-                        ),
+                        // DropdownButtonFormField<String>(
+                        //   value: role.value,
+                        //   items: const [
+                        //     DropdownMenuItem(
+                        //       value: "customer",
+                        //       child: Text("Customer"),
+                        //     ),
+                        //     DropdownMenuItem(
+                        //       value: "dealer",
+                        //       child: Text("Dealer"),
+                        //     ),
+                        //   ],
+                        //   onChanged: (val) => role.value = val!,
+                        //   decoration: const InputDecoration(
+                        //     prefixIcon: Icon(Icons.person_pin_circle_outlined),
+                        //     hintText: "Select Role",
+                        //   ),
+                        // ),
                         const SizedBox(height: 30),
                         controller.isLoading.value
                             ? const CircularProgressIndicator()
@@ -130,7 +132,8 @@ class RegisterView extends StatelessWidget {
                                     email: emailController.text,
                                     password: passwordController.text,
                                     phone: phoneController.text,
-                                    role: role.value,
+                                    role: role,
+                                    //role: role.value,
                                   );
                                 },
                                 child: Text(

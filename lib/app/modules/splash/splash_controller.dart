@@ -16,13 +16,22 @@ class SplashController extends GetxController {
   }
 
    Future<void> _initializeApp() async {
+     final authController = Get.put(AuthController(), permanent: true);
     await Future.delayed(const Duration(seconds: 2));
 
     // Just call the central navigation service. It will handle everything.
-    NavigationService().redirectUser(); 
+    if (authController.isLoggedIn) {
+      NavigationService().redirectUser();
+    } else {
+      // 👇 --- CHANGE THIS LINE --- 👇
+      // Instead of going to login, go to the new role selection screen.
+      Get.offAllNamed(AppRoutes.roleSelection);
+      // 👆 --- END OF CHANGE --- 👆
+    }
+  } 
   }
 
-}
+
 
 //   Future<void> _initializeApp() async {
 //     // A small delay for the splash screen effect
