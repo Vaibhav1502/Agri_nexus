@@ -6,6 +6,7 @@ import 'package:agri_nexus_ht/app/modules/home/widgets/pending_approval_banner.d
 import 'package:agri_nexus_ht/app/modules/profile/profile_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
 import 'package:agri_nexus_ht/app/modules/product_detail/product_detail_view.dart';
+import 'package:agri_nexus_ht/utils/url_launcher_helper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,11 @@ class HomeView extends StatelessWidget {
   final cartController = Get.put(CartController());
   final wishlistController = Get.put(WishlistController());
   final TextEditingController searchController = TextEditingController();
-   final authController = Get.find<AuthController>(); // Add this line
+  final authController = Get.find<AuthController>(); // Add this line
+
+  final String facebookUrl = "https://www.facebook.com/your-page-name";
+  final String instagramUrl = "https://www.instagram.com/your-profile-name";
+  final String twitterUrl = "https://www.twitter.com/your-handle";
 
   HomeView({super.key});
 
@@ -36,6 +41,21 @@ class HomeView extends StatelessWidget {
         centerTitle: true,
         //backgroundColor: Colors.green,
         elevation: 0,
+        actions: [
+          _buildSocialIcon(
+            'assets/images/facebook_icon.png', // Use custom icons for better branding
+            onTap: () => UrlLauncherHelper.launch(facebookUrl),
+          ),
+          _buildSocialIcon(
+            'assets/images/instagram_icon.png',
+            onTap: () => UrlLauncherHelper.launch(instagramUrl),
+          ),
+          _buildSocialIcon(
+            'assets/images/twitter_icon.png',
+            onTap: () => UrlLauncherHelper.launch(twitterUrl),
+          ),
+          const SizedBox(width: 8), // Add some padding to the right edge
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -503,6 +523,27 @@ class HomeView extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+  Widget _buildSocialIcon(String imagePath, {required VoidCallback onTap}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: CircleAvatar(
+          radius: 16,
+          backgroundColor: Colors.transparent, // Transparent background
+          child: Image.asset(
+            imagePath,
+            width: 24, // Adjust size as needed
+            height: 24,
+            // Optional: Provide an error builder for the image
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.link, size: 20),
           ),
         ),
       ),
