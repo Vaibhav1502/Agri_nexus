@@ -8,7 +8,6 @@ import 'package:agri_nexus_ht/app/services/avigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../services/storage_service.dart';
 
 class LoginController extends GetxController {

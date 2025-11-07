@@ -4,6 +4,7 @@ import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'product_detail_controller.dart';
 
 class ProductDetailView extends StatelessWidget {
@@ -14,6 +15,15 @@ class ProductDetailView extends StatelessWidget {
   final controller = Get.put(ProductDetailController());
   final cartController = Get.find<CartController>();
   final wishlistController = Get.find<WishlistController>();
+
+  void _onShare(BuildContext context, String productName, int productId) {
+    // In a real app, you would create a dynamic link or a URL to your product page.
+    // For now, we'll just share the product name and a placeholder link.
+    final String productUrl = "https://nexus.heuristictechpark.com//products/$productId";
+    final String shareText = "Check out this amazing product: $productName!\n\n$productUrl";
+
+    Share.share(shareText, subject: 'Look what I found!');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,12 +98,12 @@ class ProductDetailView extends StatelessWidget {
                     },
                   );
                 }),
-                IconButton(
-                  icon: Icon(Icons.share, color: Theme.of(context).primaryColor),
-                  onPressed: () {
-                    // TODO: Implement share functionality
-                  },
-                ),
+                // IconButton(
+                //   icon: Icon(Icons.share, color: Theme.of(context).primaryColor),
+                //   onPressed: () {
+                //     // TODO: Implement share functionality
+                //   },
+                // ),
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: Hero(
@@ -117,16 +127,46 @@ class ProductDetailView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // --- Product Title and Brand ---
-                    Text(
-                      product.name,
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
+                    Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Product Title (takes up available space)
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.name,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Brand: ${product.brand ?? 'N/A'}",
+                        style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+                // Social Media Icons
+                const SizedBox(width: 16),
+                Row(
+                  children: [
+                    _buildSocialIcon(
+                      Icons.share,
+                      onTap: () => _onShare(context, product.name, product.id),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Brand: ${product.brand ?? 'N/A'}",
-                      style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
-                    ),
+                    const SizedBox(width: 8),
+                    // _buildSocialIcon(
+                    //   Icons.wechat, // Placeholder for WhatsApp, as there's no direct icon
+                    //   onTap: () => _onShare(context, product.name, product.id),
+                    // ),
+                  ],
+                ),
+              ],
+            ),
                     const SizedBox(height: 20),
 
                     // --- Price Section ---
@@ -232,6 +272,22 @@ class ProductDetailView extends StatelessWidget {
     return Text(
       title,
       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+    );
+  }
+
+  Widget _buildSocialIcon(IconData icon, {required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: CircleAvatar(
+        radius: 20,
+        backgroundColor: Colors.grey.shade200,
+        child: Icon(
+          icon,
+          color: Colors.grey.shade700,
+          size: 22,
+        ),
+      ),
     );
   }
 
