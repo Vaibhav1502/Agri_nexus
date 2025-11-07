@@ -15,7 +15,7 @@ class CategoryDetailView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Category Details"),
-        backgroundColor: Colors.green,
+        //backgroundColor: Colors.green,
       ),
       body: Obx(() {
         if (controller.isLoading.value) {

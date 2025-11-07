@@ -187,6 +187,11 @@ class ProductDetailView extends StatelessWidget {
                     // You can add more details here in a structured way
                     _buildDetailRow("Power Source:", product.power_source ?? 'N/A'),
                     _buildDetailRow("Category:", product.categoryName ?? 'N/A'),
+                    _buildDetailRow("Stock Quantity:", product.stock_quantity.toString()),
+                    _buildDetailRow("warranty", product.warranty.toString()),
+                    _buildDetailRow("Weight", product.weight.toString()),
+                    _buildDetailRow("Dimensions", product.dimensions.toString()),
+                   
                     
                     const Divider(height: 40, thickness: 1),
 
