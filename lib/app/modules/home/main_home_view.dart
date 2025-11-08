@@ -20,7 +20,7 @@ class MainHomeView extends StatelessWidget {
     final cartController = Get.find<CartController>();
     //  final profileController = Get.put(ProfileController(), permanent: true);
     // final wishlistController = Get.put(WishlistController(), permanent: true);
-    cartController.fetchCartCount();
+    //cartController.fetchCartCount();
 
     final List<Widget> pages = [
       HomeView(),
@@ -67,7 +67,7 @@ class MainHomeView extends StatelessWidget {
             // 🛒 Cart with badge
             BottomNavigationBarItem(
               icon: Obx(() {
-                final count = cartController.cartCount.value;
+                final count = cartController.cartCount;
                 return Stack(
                   clipBehavior: Clip.none,
                   children: [

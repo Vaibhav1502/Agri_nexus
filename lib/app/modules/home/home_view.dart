@@ -1,4 +1,5 @@
 import 'package:agri_nexus_ht/app/controller/auth_controller.dart';
+import 'package:agri_nexus_ht/app/controller/network_controller.dart';
 import 'package:agri_nexus_ht/app/modules/home/category_controller.dart';
 import 'package:agri_nexus_ht/app/modules/home/featured_product_controller.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
@@ -6,6 +7,7 @@ import 'package:agri_nexus_ht/app/modules/home/widgets/pending_approval_banner.d
 import 'package:agri_nexus_ht/app/modules/profile/profile_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
 import 'package:agri_nexus_ht/app/modules/product_detail/product_detail_view.dart';
+import 'package:agri_nexus_ht/app/widgets/offline_widget.dart';
 import 'package:agri_nexus_ht/utils/url_launcher_helper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +22,11 @@ class HomeView extends StatelessWidget {
   final wishlistController = Get.put(WishlistController());
   final TextEditingController searchController = TextEditingController();
   final authController = Get.find<AuthController>(); // Add this line
+   final networkController = Get.find<NetworkController>();
 
-  final String facebookUrl = "https://www.facebook.com/your-page-name";
-  final String instagramUrl = "https://www.instagram.com/your-profile-name";
-  final String twitterUrl = "https://www.twitter.com/your-handle";
+  final String facebookUrl = "https://www.facebook.com/greenekart";
+  final String youtubeUrl = "https://youtube.com/@greenekart2626?si=PM9kj_cYg8Y08l6T";
+  final String whatsappUrl = "https://wa.me/+918295282656";
 
   HomeView({super.key});
 
@@ -41,23 +44,45 @@ class HomeView extends StatelessWidget {
         centerTitle: true,
         //backgroundColor: Colors.green,
         elevation: 0,
-        actions: [
-          _buildSocialIcon(
-            'assets/images/facebook_icon.png', // Use custom icons for better branding
-            onTap: () => UrlLauncherHelper.launch(facebookUrl),
+         actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert), // The "three dots" icon
+            onSelected: (String url) {
+              // This function is called when a menu item is tapped.
+              // The 'value' of the tapped item is the URL.
+              UrlLauncherHelper.launch(url);
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              _buildPopupMenuItem(
+                title: "Facebook",
+                icon: Icons.facebook,
+                iconColor: Colors.blue.shade800,
+                value: facebookUrl,
+              ),
+              _buildPopupMenuItem(
+                title: "Youtube",
+                // There's no official Instagram icon, so we use a generic one
+                icon: Icons.youtube_searched_for,
+                iconColor: Colors.purple.shade600,
+                value: youtubeUrl,
+              ),
+              _buildPopupMenuItem(
+                title: "Whatsapp",
+                // A generic icon for Twitter/X
+                icon: Icons.chat_bubble_outline_rounded,
+                
+                iconColor: Colors.lightBlue.shade400,
+                value: whatsappUrl,
+              ),
+            ],
           ),
-          _buildSocialIcon(
-            'assets/images/instagram_icon.png',
-            onTap: () => UrlLauncherHelper.launch(instagramUrl),
-          ),
-          _buildSocialIcon(
-            'assets/images/twitter_icon.png',
-            onTap: () => UrlLauncherHelper.launch(twitterUrl),
-          ),
-          const SizedBox(width: 8), // Add some padding to the right edge
         ],
       ),
-      body: RefreshIndicator(
+      body: Obx((){
+         if (!networkController.isOnline.value) {
+          return const OfflineWidget();
+        }
+        return RefreshIndicator(
         onRefresh: () async {
           await Get.find<ProfileController>().fetchAndUpdateUserProfile();
           await controller.fetchProducts();
@@ -70,7 +95,7 @@ class HomeView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 // 👇 --- ADD THIS TEMPORARY DEBUG WIDGET --- 👇
+                 
                  Obx(() {
                   // Show the banner only if the user is a pending dealer.
                   if (authController.isPendingDealer) {
@@ -525,27 +550,26 @@ class HomeView extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      );
+      })
     );
   }
-  Widget _buildSocialIcon(String imagePath, {required VoidCallback onTap}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: CircleAvatar(
-          radius: 16,
-          backgroundColor: Colors.transparent, // Transparent background
-          child: Image.asset(
-            imagePath,
-            width: 24, // Adjust size as needed
-            height: 24,
-            // Optional: Provide an error builder for the image
-            errorBuilder: (context, error, stackTrace) =>
-                const Icon(Icons.link, size: 20),
-          ),
-        ),
+   PopupMenuItem<String> _buildPopupMenuItem({
+    required String title,
+    required IconData icon,
+    
+    required Color iconColor,
+    required String value,
+  }) {
+    return PopupMenuItem<String>(
+      value: value, // The URL that will be passed to onSelected
+      child: Row(
+        children: [
+          
+          Icon(icon, color: iconColor),
+          const SizedBox(width: 12),
+          Text(title),
+        ],
       ),
     );
   }

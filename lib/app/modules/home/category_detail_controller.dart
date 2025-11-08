@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:agri_nexus_ht/app/controller/auth_controller.dart';
 import 'package:agri_nexus_ht/app/data/models/product_model.dart';
@@ -13,6 +14,8 @@ class CategoryDetailController extends GetxController {
   var categoryName = ''.obs;
   var categoryDescription = ''.obs;
   var products = <Product>[].obs;
+
+   var groupedProducts = <String, List<Product>>{}.obs;
 
    int? _currentCategoryId;
 
@@ -59,7 +62,23 @@ class CategoryDetailController extends GetxController {
           categoryDescription.value = categoryData["description"] ?? "";
 
           final productList = data["data"]["products"]["data"] as List;
+          final allProducts = productList.map((e) => Product.fromJson(e)).toList();
           products.value = productList.map((e) => Product.fromJson(e)).toList();
+          products.value = allProducts;
+
+           // 👇 --- GROUP THE PRODUCTS BY SUBCATEGORY --- 👇
+          final grouped = <String, List<Product>>{};
+          for (var product in allProducts) {
+            // Use subcategory name as the key, or a default key for products without one.
+            String key = product.subcategory?.name ?? 'Other Products';
+            if (!grouped.containsKey(key)) {
+              grouped[key] = [];
+            }
+            grouped[key]!.add(product);
+          }
+          
+          // Use a LinkedHashMap to preserve insertion order if desired
+          groupedProducts.value = LinkedHashMap.from(grouped);
           if (products.isNotEmpty) {
              print("✅ Category details fetched. First product's dealer price: ${products.first.dealerSalePrice}");
           }

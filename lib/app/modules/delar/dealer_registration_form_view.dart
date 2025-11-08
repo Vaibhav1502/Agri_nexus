@@ -59,7 +59,7 @@ class DealerRegistrationFormView extends StatelessWidget {
               const SizedBox(height: 16),
               TextFormField(
                 controller: controller.websiteController,
-                decoration: const InputDecoration(labelText: "Company Website (Optional)"),
+                decoration: const InputDecoration(labelText: "Company Website"),
                 // 👇 ADD VALIDATOR FOR URL
         validator: (value) {
           if (value != null && value.isNotEmpty) {
@@ -75,7 +75,7 @@ class DealerRegistrationFormView extends StatelessWidget {
               const SizedBox(height: 16),
               TextFormField(
                 controller: controller.descriptionController,
-                decoration: const InputDecoration(labelText: "Business Description (Optional)"),
+                decoration: const InputDecoration(labelText: "Business Description"),
                 maxLines: 3,
               ),
               const SizedBox(height: 20),

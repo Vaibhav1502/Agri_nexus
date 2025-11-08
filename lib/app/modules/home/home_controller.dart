@@ -1,4 +1,5 @@
 import 'package:agri_nexus_ht/app/controller/auth_controller.dart';
+import 'package:agri_nexus_ht/app/controller/network_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../data/models/product_model.dart';
@@ -6,6 +7,7 @@ import '../../data/providers/product_provider.dart';
 
 class HomeController extends GetxController {
   final _provider = ProductProvider();
+  final networkController = Get.find<NetworkController>();
    final authController = Get.find<AuthController>(); // 👈 GET INSTANCE
   var products = <Product>[].obs;
   var isLoading = false.obs;
@@ -20,12 +22,18 @@ class HomeController extends GetxController {
   void onInit() {
      // 👇 --- ADD THIS LISTENER --- 👇
     // This will automatically call fetchProducts whenever the user logs in or out.
-    //ever(authController.currentUser, (_) => fetchProducts());
+    ever(authController.currentUser, (_) => fetchProducts());
     fetchProducts();
     super.onInit();
   }
 
   Future<void> fetchProducts() async {
+    if (!networkController.isOnline.value) {
+      // Don't show a snackbar here, the NetworkController already is.
+      // Just stop the function from proceeding.
+      print("Offline: Skipping fetchProducts().");
+      return; 
+    }
     print("🚀 Fetching products..."); // Add a log to see when it runs
     try {
       isLoading.value = true;

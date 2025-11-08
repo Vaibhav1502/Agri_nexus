@@ -1,3 +1,4 @@
+import 'package:agri_nexus_ht/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'cart_controller.dart';
@@ -151,6 +152,7 @@ class CartView extends StatelessWidget {
                   // ✅ Proceed to Checkout Button
                   ElevatedButton(
                     onPressed: () {
+                       Get.toNamed(AppRoutes.checkout);
                       // TODO: Checkout flow
                     },
                     style: ElevatedButton.styleFrom(

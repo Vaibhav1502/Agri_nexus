@@ -13,7 +13,9 @@ class CartController extends GetxController {
   var taxAmount = 0.0.obs;
   var shippingAmount = 0.0.obs;
   var total = 0.0.obs;
-  var cartCount = 0.obs;
+  //var cartCount = 0.obs;
+
+  int get cartCount => cartItems.length;
 
   /// 🛒 Fetch Cart Items
   Future<void> fetchCart() async {
@@ -22,6 +24,8 @@ class CartController extends GetxController {
 
       final token = await storageService.getToken();
       if (token == null) {
+        cartItems.clear();
+        _clearTotals();
         print("❌ No token found, user not logged in");
         Get.snackbar("Error", "Please login first to view your cart");
         return;
@@ -37,19 +41,27 @@ class CartController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        if (data['success'] == true) {
+        if (data['success'] == true && data['data'] != null) {
           final cartData = data['data'];
-          cartItems.value = cartData['items'];
+          cartItems.value = cartData['items'] ?? [];
           subtotal.value = (cartData['subtotal'] ?? 0).toDouble();
           taxAmount.value = (cartData['tax_amount'] ?? 0).toDouble();
           shippingAmount.value =
               (cartData['shipping_amount'] ?? 0).toDouble();
           total.value = (cartData['total'] ?? 0).toDouble();
+        }else {
+          // If the API call succeeds but reports no cart, clear everything.
+          cartItems.clear();
+          _clearTotals();
         }
       } else {
+         cartItems.clear();
+        _clearTotals();
         print("❌ Error fetching cart: ${response.body}");
       }
     } catch (e) {
+       cartItems.clear();
+      _clearTotals();
       print("Error fetching cart: $e");
     } finally {
       isLoading(false);
@@ -59,7 +71,7 @@ class CartController extends GetxController {
   /// ➕ Add Product to Cart
   Future<void> addToCart(int productId, {int quantity = 1}) async {
     try {
-      isLoading(true);
+      //isLoading(true);
       
 
       final token = await storageService.getToken();
@@ -92,7 +104,7 @@ class CartController extends GetxController {
              backgroundColor: Colors.green.shade600, colorText: Colors.white, snackPosition: SnackPosition.BOTTOM, margin: const EdgeInsets.all(10),duration: Duration(seconds: 2),animationDuration: const Duration(milliseconds: 600)
           );
           await fetchCart();
-          await fetchCartCount();
+         // await fetchCartCount();
         } else {
           Get.snackbar(
             "Error",
@@ -120,7 +132,7 @@ class CartController extends GetxController {
         colorText: Colors.white,
       );
     } finally {
-      isLoading(false);
+     // isLoading(false);
     }
   }
 
@@ -164,7 +176,7 @@ class CartController extends GetxController {
             margin: const EdgeInsets.all(10),
           );
           await fetchCart();
-          await fetchCartCount();
+          //await fetchCartCount();
         } else {
           Get.snackbar(
             "Error",
@@ -226,7 +238,7 @@ class CartController extends GetxController {
           margin: const EdgeInsets.all(10),
         );
         await fetchCart(); // refresh the cart
-        await fetchCartCount();
+        //await fetchCartCount();
       } else {
         Get.snackbar(
           "Error",
@@ -279,12 +291,15 @@ Future<void> clearCart() async {
       final data = jsonDecode(response.body);
 
       if (data["success"] == true) {
+        
         Get.snackbar(
           "Cart Cleared",
           data["message"] ?? "All items removed from cart!", backgroundColor: Colors.green.shade600, colorText: Colors.white, snackPosition: SnackPosition.BOTTOM, margin: const EdgeInsets.all(10),duration: Duration(seconds: 2),animationDuration: const Duration(milliseconds: 600),
         );
-        await fetchCart(); // refresh cart view
-        await fetchCartCount();
+         cartItems.clear();
+        _clearTotals();
+        // await fetchCart(); // refresh cart view
+        // await fetchCartCount();
       } else {
         Get.snackbar(
           "Error",
@@ -316,31 +331,39 @@ Future<void> clearCart() async {
   }
 }
 
-Future<void> fetchCartCount() async {
-  try {
-    isLoading.value = true;
-    final token = await storageService.getToken();
-
-    final response = await http.get(
-      Uri.parse("https://nexus.heuristictechpark.com/api/v1/cart/count"),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    final data = jsonDecode(response.body);
-    if (response.statusCode == 200 && data['success'] == true) {
-      cartCount.value = data['data']['count'] ?? 0;
-      debugPrint("🛒 Cart count: ${cartCount.value}");
-    } else {
-      debugPrint("⚠️ Failed to fetch cart count: ${data['message']}");
-    }
-  } catch (e) {
-    debugPrint("❌ Error fetching cart count: $e");
-  } finally {
-    isLoading.value = false;
+// Helper function to clear all total values
+  void _clearTotals() {
+    subtotal.value = 0.0;
+    taxAmount.value = 0.0;
+    shippingAmount.value = 0.0;
+    total.value = 0.0;
   }
+
+// Future<void> fetchCartCount() async {
+//   try {
+//     isLoading.value = true;
+//     final token = await storageService.getToken();
+
+//     final response = await http.get(
+//       Uri.parse("https://nexus.heuristictechpark.com/api/v1/cart/count"),
+//       headers: {
+//         'Authorization': 'Bearer $token',
+//       },
+//     );
+
+//     final data = jsonDecode(response.body);
+//     if (response.statusCode == 200 && data['success'] == true) {
+//       cartCount.value = data['data']['count'] ?? 0;
+//       debugPrint("🛒 Cart count: ${cartCount.value}");
+//     } else {
+//       debugPrint("⚠️ Failed to fetch cart count: ${data['message']}");
+//     }
+//   } catch (e) {
+//     debugPrint("❌ Error fetching cart count: $e");
+//   } finally {
+//     isLoading.value = false;
+//   }
  
-}
+// }
    
 }

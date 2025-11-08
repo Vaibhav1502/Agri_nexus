@@ -41,6 +41,11 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200 && data["success"] == true) {
         final token = data["data"]["token"];
+         // 👇 --- ADD THIS LOG --- 👇
+        print("--- 🔑 LOGGING IN ---");
+        print("Saving new token: $token");
+        print("--------------------");
+        // 👆 --- END OF LOG --- 👆
         //final userData = data["data"]["user"];  
         // print("✅ LOGGING IN USER: $userData"); // <-- ADD THIS  
         await storageService.saveToken(token);

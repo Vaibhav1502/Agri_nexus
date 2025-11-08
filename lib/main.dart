@@ -1,10 +1,12 @@
 import 'package:agri_nexus_ht/app/controller/auth_controller.dart';
+import 'package:agri_nexus_ht/app/controller/network_controller.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
 import 'package:agri_nexus_ht/app/modules/home/home_controller.dart';
 import 'package:agri_nexus_ht/app/modules/profile/profile_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
 import 'package:agri_nexus_ht/app/navigation/navigator_key.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
 import 'app/theme/theme.dart';
@@ -13,6 +15,7 @@ import 'app/theme/theme.dart';
 // Create an async function to initialize services
 Future<void> initServices() async {
   print("--- Initializing App Services & Controllers ---");
+  Get.put(NetworkController(), permanent: true);
   // Put AuthController and tell GetX to wait until its onReady is called.
   // We will make it permanent here.
   await Get.putAsync(() => AuthController().init(), permanent: true);
@@ -30,6 +33,7 @@ Future<void> initServices() async {
 void main() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
+   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   
   // Call our new init function
   await initServices();

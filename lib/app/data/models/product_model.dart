@@ -1,4 +1,5 @@
 import 'package:agri_nexus_ht/app/controller/auth_controller.dart';
+import 'package:agri_nexus_ht/app/data/models/subcategory_model.dart';
 import 'package:get/get.dart';
 
 class Product {
@@ -14,6 +15,7 @@ class Product {
   final String? image;
   final String? brand;
   final String? categoryName;
+  final Subcategory? subcategory; // 👈 ADD THIS
   final int discountPercentage;
   final List<Product> relatedProducts; // 👈 Added this
   final String? power_source;
@@ -60,6 +62,7 @@ class Product {
     this.image,
     this.brand,
     this.categoryName,
+    this.subcategory,
     required this.discountPercentage,
     this.relatedProducts = const [], // 👈 Prevent null errors
     this.power_source,
@@ -88,6 +91,9 @@ class Product {
       image: json["image"],
       brand: json["brand"],
       categoryName: json["category"]?["name"],
+      subcategory: json["subcategory"] != null
+          ? Subcategory.fromJson(json["subcategory"])
+          : null,
       discountPercentage: json["discount_percentage"] ?? 0,
       relatedProducts: json["related_products"] != null
           ? (json["related_products"] as List)
