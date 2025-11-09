@@ -15,6 +15,8 @@ class CategoryDetailController extends GetxController {
   var categoryDescription = ''.obs;
   var products = <Product>[].obs;
 
+  String? _currentCategorySlug; 
+
    var groupedProducts = <String, List<Product>>{}.obs;
 
    int? _currentCategoryId;
@@ -26,27 +28,26 @@ class CategoryDetailController extends GetxController {
     // This will automatically re-fetch the category details if the user's login status changes.
     ever(authController.currentUser, (_) {
       // Only refresh if we have a category ID to load
-      if (_currentCategoryId != null) {
-        print("Auth state changed. Refreshing category details for ID: $_currentCategoryId");
-        fetchCategoryDetails(_currentCategoryId!);
+     if (_currentCategorySlug != null) {
+        fetchCategoryDetails(_currentCategorySlug!);
       }
     });
   }
 
-  Future<void> fetchCategoryDetails(int categoryId) async {
+  Future<void> fetchCategoryDetails(String categorySlug) async {
 
      // Store the ID so the listener can use it
-    _currentCategoryId = categoryId; 
+    _currentCategorySlug = categorySlug; 
     
     // Prevent re-fetching if already loading for the same category
     if (isLoading.value) return; 
 
     try {
       isLoading(true);
-        print("🚀 Fetching category details for ID: $categoryId");
+        print("🚀 Fetching category details for SLUG: $categorySlug");
       final token = await storageService.getToken();
       final response = await http.get(
-        Uri.parse("https://nexus.heuristictechpark.com/api/v1/categories/$categoryId"),
+        Uri.parse("https://nexus.heuristictechpark.com/api/v1/categories/$categorySlug"),
          headers: {
           'Accept': 'application/json',
           if (token != null) 'Authorization': 'Bearer $token',

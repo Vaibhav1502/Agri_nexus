@@ -1,27 +1,28 @@
 // category_detail_view.dart
 
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
+import 'package:agri_nexus_ht/app/modules/subcategories/subcategory_detail_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'category_detail_controller.dart';
 
-class CategoryDetailView extends StatelessWidget {
+
+class SubcategoryDetailView  extends StatelessWidget {
   // Find the existing permanent controllers
-  final controller = Get.put(CategoryDetailController());
+  
   final cartController = Get.find<CartController>();
   final wishlistController = Get.find<WishlistController>();
 
-  CategoryDetailView({super.key});
+  SubcategoryDetailView ({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final CategoryDetailController controller = Get.put(CategoryDetailController());
-   final String categorySlug = Get.arguments as String;// category ID passed from HomeView
-    return GetBuilder<CategoryDetailController>(
+     final SubcategoryDetailController controller = Get.put(SubcategoryDetailController());
+    final String subcategorySlug = Get.arguments as String;// category ID passed from HomeView
+    return GetBuilder<SubcategoryDetailController>(
       initState: (_) {
         // This is called once when the widget is first inserted into the tree.
-        controller.fetchCategoryDetails(categorySlug);
+       controller.fetchSubcategoryDetails(subcategorySlug);
       },
       builder: (ctrl) {
         // Find the other permanent controllers
@@ -31,8 +32,8 @@ class CategoryDetailView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text(controller.categoryName.value.isNotEmpty
-            ? controller.categoryName.value
+        title: Obx(() => Text(controller.subcategoryName.value.isNotEmpty
+            ? controller.subcategoryName.value
             : "Category Details")),
       ),
       body: Obx(() {
@@ -52,16 +53,16 @@ class CategoryDetailView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      controller.categoryName.value,
+                      controller.subcategoryName.value,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    if (controller.categoryDescription.value.isNotEmpty)
+                    if (controller.subcategoryDescription.value.isNotEmpty)
                       Text(
-                        controller.categoryDescription.value,
+                        controller.subcategoryDescription.value,
                         style: const TextStyle(fontSize: 15, color: Colors.grey),
                       ),
                   ],

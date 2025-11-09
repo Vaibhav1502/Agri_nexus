@@ -43,12 +43,17 @@ class CartView extends StatelessWidget {
                   final quantity = item['quantity'];
 
                   return Card(
+                    
                     elevation: 3,
                     margin: const EdgeInsets.only(bottom: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
+                      onTap: () {
+                        // Navigate to the product detail page, passing the product's ID
+                        Get.toNamed('/product-detail', arguments: productId);
+                      },
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(

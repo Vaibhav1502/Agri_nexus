@@ -15,7 +15,8 @@ class Product {
   final String? image;
   final String? brand;
   final String? categoryName;
-  final Subcategory? subcategory; // 👈 ADD THIS
+  final Subcategory? subcategory;
+
   final int discountPercentage;
   final List<Product> relatedProducts; // 👈 Added this
   final String? power_source;

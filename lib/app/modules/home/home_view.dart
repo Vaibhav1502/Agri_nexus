@@ -7,6 +7,7 @@ import 'package:agri_nexus_ht/app/modules/home/widgets/pending_approval_banner.d
 import 'package:agri_nexus_ht/app/modules/profile/profile_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
 import 'package:agri_nexus_ht/app/modules/product_detail/product_detail_view.dart';
+import 'package:agri_nexus_ht/app/routes/app_pages.dart';
 import 'package:agri_nexus_ht/app/widgets/offline_widget.dart';
 import 'package:agri_nexus_ht/utils/url_launcher_helper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -152,12 +153,32 @@ class HomeView extends StatelessWidget {
 
                 // 🧭 Category Section
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: const Text(
-                    "Shop by Category",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
+  padding: const EdgeInsets.fromLTRB(12, 6, 4, 6), // Adjust padding
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      const Text(
+        "Shop by Category",
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+      // 👇 --- ADD THIS "VIEW ALL" BUTTON --- 👇
+      TextButton(
+        onPressed: () {
+          Get.toNamed(AppRoutes.allCategories);
+        },
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("View All"),
+            SizedBox(width: 4),
+            Icon(Icons.arrow_forward, size: 16),
+          ],
+        ),
+      )
+      // 👆 --- END OF BUTTON --- 👆
+    ],
+  ),
+),
 
                 Obx(() {
                   if (categoryController.isLoading.value) {
@@ -182,10 +203,18 @@ class HomeView extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final category = categoryController.categories[index];
                         return GestureDetector(
-                          onTap: () => Get.toNamed(
-                            '/category-detail',
-                            arguments: category.id,
-                          ),
+                         onTap: () {
+      // 👇 --- THIS IS THE FIX --- 👇
+      // Pass the category's slug as the argument.
+      // Make sure the slug is not null or empty before navigating.
+      if (category.slug != null && category.slug!.isNotEmpty) {
+        Get.toNamed('/category-detail', arguments: category.slug);
+      } else {
+        // Fallback or show an error if slug is missing
+        Get.snackbar("Error", "Cannot open this category.");
+      }
+      // 👆 --- END OF FIX --- 👆
+                         },
                           child: Container(
                             width: 100,
                             margin: const EdgeInsets.only(right: 10),
@@ -479,10 +508,17 @@ class HomeView extends StatelessWidget {
                                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                           ),
                                           const SizedBox(height: 4),
-                                          Text(
-                                            product.categoryName ?? "",
-                                            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                                          ),
+                                           // 👇 --- THIS IS THE UI UPDATE --- 👇
+                    // Display Category > Subcategory if subcategory exists
+                    Text(
+                      product.subcategory != null
+                          ? "${product.categoryName} > ${product.subcategory!.name}"
+                          : product.categoryName ?? "", // Fallback to just category name
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                    ),
+                    // 👆 --- END OF UI UPDATE --- 👆
                                           const SizedBox(height: 6),
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

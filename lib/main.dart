@@ -1,6 +1,7 @@
 import 'package:agri_nexus_ht/app/controller/auth_controller.dart';
 import 'package:agri_nexus_ht/app/controller/network_controller.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
+import 'package:agri_nexus_ht/app/modules/home/category_controller.dart';
 import 'package:agri_nexus_ht/app/modules/home/home_controller.dart';
 import 'package:agri_nexus_ht/app/modules/profile/profile_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
@@ -24,6 +25,7 @@ Future<void> initServices() async {
   Get.put(CartController(), permanent: true);
   Get.put(ProfileController(), permanent: true);
   Get.put(WishlistController(), permanent: true);
+   Get.put(CategoryController(), permanent: true);
   
   print("--- Services & Controllers are ready ---");
   

@@ -59,6 +59,10 @@ class ProductView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12)),
                       margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
+                        onTap: () {
+                          // Navigate to the product detail page with the product's ID
+                          Get.toNamed('/product-detail', arguments: product.id);
+                        },
                         leading: product.image != null && product.image!.isNotEmpty
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(8),

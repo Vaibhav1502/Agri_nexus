@@ -101,7 +101,7 @@ class CheckoutController extends GetxController {
       final data = jsonDecode(response.body);
 
       // 5. Handle the response
-      if (response.statusCode == 200 && data['success'] == true) {
+      if ((response.statusCode == 200 || response.statusCode == 201) && data['success'] == true) {
         // Order placed successfully!
         Get.snackbar(
           "Success!",
@@ -111,8 +111,9 @@ class CheckoutController extends GetxController {
         );
 
         // Clear the cart and navigate to the home or orders screen
-        await cartController.clearCart();
-        Get.offAllNamed(AppRoutes.home); // Or navigate to your orders page
+         Future.delayed(const Duration(seconds: 2), () {
+      Get.offAllNamed(AppRoutes.home);
+    }); // Or navigate to your orders page
         
       } else {
         // Handle errors, like an empty cart
