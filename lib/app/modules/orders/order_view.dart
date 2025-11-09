@@ -1,5 +1,6 @@
 // app/modules/orders/order_view.dart
 
+import 'package:agri_nexus_ht/app/modules/orders/widgets/order_tracker.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'order_controller.dart';
@@ -87,7 +88,7 @@ class OrderView extends StatelessWidget {
                           "Order #${order.orderNumber}",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: 14,
                           ),
                         ),
 
@@ -98,41 +99,54 @@ class OrderView extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               'Total: ₹${order.totalAmount.toStringAsFixed(2)}',
-                              style: const TextStyle(fontWeight: FontWeight.w500),
+                              style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
                             ),
                             const SizedBox(height: 2),
                             Text(
                               "Placed on: ${order.formattedDate}",
-                              style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                              style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                             ),
-                            const SizedBox(height: 4),
-                            // Status Chip
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: _getStatusColor(order.orderStatus).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                order.orderStatus.capitalizeFirst ?? order.orderStatus,
-                                style: TextStyle(
-                                  color: _getStatusColor(order.orderStatus),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
+                            const Divider(height: 24),
+
+                      // 👇 --- 2. REPLACE THE STATUS CHIP WITH THE TRACKER --- 👇
+                      // If the order is cancelled, show a simple text message
+                      if (order.orderStatus.toLowerCase() == 'cancelled')
+                        const Text(
+                          "This order has been cancelled.",
+                          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                        )
+                      else
+                        // Otherwise, show the tracker
+                        OrderTracker(currentStatus: order.orderStatus),
+                      // 👆 --- END OF REPLACEMENT --- 👆
+                            // const SizedBox(height: 4),
+                            // // Status Chip
+                            // Container(
+                            //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            //   decoration: BoxDecoration(
+                            //     color: _getStatusColor(order.orderStatus).withOpacity(0.1),
+                            //     borderRadius: BorderRadius.circular(20),
+                            //   ),
+                            //   child: Text(
+                            //     order.orderStatus.capitalizeFirst ?? order.orderStatus,
+                            //     style: TextStyle(
+                            //       color: _getStatusColor(order.orderStatus),
+                            //       fontWeight: FontWeight.bold,
+                            //       fontSize: 12,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
 
                         // --- TRAILING: Details Button ---
-                        trailing: const Icon(Icons.chevron_right),
-                        onTap: () {
-                           Get.toNamed('/order-detail', arguments: order.orderNumber);
-                          // TODO: Navigate to Order Detail View
-                          // Get.toNamed('/order-detail', arguments: order.orderNumber);
-                         // Get.snackbar("Coming Soon", "Order detail page is under development.");
-                        },
+                        // trailing: const Icon(Icons.chevron_right),
+                        // onTap: () {
+                        //    Get.toNamed('/order-detail', arguments: order.orderNumber);
+                        //   // TODO: Navigate to Order Detail View
+                        //   // Get.toNamed('/order-detail', arguments: order.orderNumber);
+                        //  // Get.snackbar("Coming Soon", "Order detail page is under development.");
+                        // },
                       ),
                     ),
                   );

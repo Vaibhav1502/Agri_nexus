@@ -1,4 +1,5 @@
 import 'package:agri_nexus_ht/app/controller/auth_controller.dart';
+import 'package:agri_nexus_ht/app/controller/global_controller.dart';
 import 'package:agri_nexus_ht/app/controller/network_controller.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
 import 'package:agri_nexus_ht/app/modules/home/category_controller.dart';
@@ -17,6 +18,7 @@ import 'app/theme/theme.dart';
 Future<void> initServices() async {
   print("--- Initializing App Services & Controllers ---");
   Get.put(NetworkController(), permanent: true);
+  Get.put(GlobalController(), permanent: true);
   // Put AuthController and tell GetX to wait until its onReady is called.
   // We will make it permanent here.
   await Get.putAsync(() => AuthController().init(), permanent: true);

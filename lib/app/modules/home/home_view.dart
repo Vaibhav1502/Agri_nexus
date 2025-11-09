@@ -14,6 +14,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'home_controller.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeView extends StatelessWidget {
   final controller = Get.put(HomeController());
@@ -29,6 +31,8 @@ class HomeView extends StatelessWidget {
   final String youtubeUrl = "https://youtube.com/@greenekart2626?si=PM9kj_cYg8Y08l6T";
   final String whatsappUrl = "https://wa.me/+918295282656";
 
+  
+
   HomeView({super.key});
 
   final List<String> bannerImages = [
@@ -36,6 +40,13 @@ class HomeView extends StatelessWidget {
     "https://img.freepik.com/free-vector/hand-drawn-farming-lifestyle-webinar_23-2150205062.jpg?semt=ais_hybrid&w=740&q=80",
     "https://img.freepik.com/free-vector/hand-drawn-agriculture-company-template_23-2149682583.jpg?semt=ais_hybrid&w=740&q=80",
   ];
+
+   Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      Get.snackbar("Error", "Could not open the link.");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,35 +56,40 @@ class HomeView extends StatelessWidget {
         centerTitle: true,
         //backgroundColor: Colors.green,
         elevation: 0,
-         actions: [
+          actions: [
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert), // The "three dots" icon
-            onSelected: (String url) {
-              // This function is called when a menu item is tapped.
-              // The 'value' of the tapped item is the URL.
-              UrlLauncherHelper.launch(url);
+            icon: const Icon(Icons.more_vert), // The three-dot icon
+            onSelected: (value) {
+              // Handle the selection
+              if (value == 'facebook') {
+                _launchURL(facebookUrl);
+              } else if (value == 'youtube') {
+                _launchURL(youtubeUrl);
+              } else if (value == 'whatsapp') {
+                _launchURL(whatsappUrl);
+              }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              _buildPopupMenuItem(
-                title: "Facebook",
-                icon: Icons.facebook,
-                iconColor: Colors.blue.shade800,
-                value: facebookUrl,
+              const PopupMenuItem<String>(
+                value: 'facebook',
+                child: ListTile(
+                  leading: FaIcon(FontAwesomeIcons.facebook, color: Colors.blue),
+                  title: Text('Facebook'),
+                ),
               ),
-              _buildPopupMenuItem(
-                title: "Youtube",
-                // There's no official Instagram icon, so we use a generic one
-                icon: Icons.youtube_searched_for,
-                iconColor: Colors.purple.shade600,
-                value: youtubeUrl,
+              const PopupMenuItem<String>(
+                value: 'youtube',
+                child: ListTile(
+                  leading: FaIcon(FontAwesomeIcons.youtube, color: Colors.red),
+                  title: Text('YouTube'),
+                ),
               ),
-              _buildPopupMenuItem(
-                title: "Whatsapp",
-                // A generic icon for Twitter/X
-                icon: Icons.chat_bubble_outline_rounded,
-                
-                iconColor: Colors.lightBlue.shade400,
-                value: whatsappUrl,
+              const PopupMenuItem<String>(
+                value: 'whatsapp',
+                child: ListTile(
+                  leading: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green),
+                  title: Text('WhatsApp'),
+                ),
               ),
             ],
           ),
@@ -590,23 +606,23 @@ class HomeView extends StatelessWidget {
       })
     );
   }
-   PopupMenuItem<String> _buildPopupMenuItem({
-    required String title,
-    required IconData icon,
+  //  PopupMenuItem<String> _buildPopupMenuItem({
+  //   required String title,
+  //   required IconData icon,
     
-    required Color iconColor,
-    required String value,
-  }) {
-    return PopupMenuItem<String>(
-      value: value, // The URL that will be passed to onSelected
-      child: Row(
-        children: [
+  //   required Color iconColor,
+  //   required String value,
+  // }) {
+  //   return PopupMenuItem<String>(
+  //     value: value, // The URL that will be passed to onSelected
+  //     child: Row(
+  //       children: [
           
-          Icon(icon, color: iconColor),
-          const SizedBox(width: 12),
-          Text(title),
-        ],
-      ),
-    );
-  }
+  //         Icon(icon, color: iconColor),
+  //         const SizedBox(width: 12),
+  //         Text(title),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

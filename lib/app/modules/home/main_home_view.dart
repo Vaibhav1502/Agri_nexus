@@ -1,3 +1,4 @@
+import 'package:agri_nexus_ht/app/controller/global_controller.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_view.dart';
 import 'package:agri_nexus_ht/app/modules/orders/order_view.dart';
 import 'package:agri_nexus_ht/app/modules/products/product_view.dart';
@@ -18,6 +19,7 @@ class MainHomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
     final cartController = Get.find<CartController>();
+    final globalController = Get.find<GlobalController>();
     //  final profileController = Get.put(ProfileController(), permanent: true);
     // final wishlistController = Get.put(WishlistController(), permanent: true);
     //cartController.fetchCartCount();
@@ -30,15 +32,25 @@ class MainHomeView extends StatelessWidget {
       OrderView(),
       ProfileView(),
       
-      const Center(
-        child: Text(
-          "Profile (Coming Soon)",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ),
     ];
 
-    return Obx(() {
+     return PopScope(
+      // The `canPop` property determines if the screen can be popped.
+      // We set it to `false` to always intercept the back press.
+      canPop: false,
+      
+      // The `onPopInvoked` callback is where our logic runs.
+      // The `didPop` boolean tells us if the pop was successful (we can ignore it here).
+      onPopInvoked: (bool didPop) {
+        // We call our controller's logic. If it returns `true`, it means we
+        // should exit, so we manually pop the navigator.
+        if (globalController.canPop()) {
+          // This will close the app.
+          Navigator.of(context).pop();
+        }
+      },
+
+    child:  Obx(() {
       return Scaffold(
         body: pages[controller.selectedIndex.value],
         bottomNavigationBar: BottomNavigationBar(
@@ -111,6 +123,6 @@ class MainHomeView extends StatelessWidget {
           ],
         ),
       );
-    });
+    }));
   }
 }

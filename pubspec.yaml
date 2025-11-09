@@ -43,6 +43,8 @@ dependencies:
   url_launcher: ^6.2.1
   connectivity_plus: ^5.0.2
   intl: ^0.18.1
+  another_stepper: 
+  font_awesome_flutter: ^10.6.0
 
 dev_dependencies:
   flutter_test:
