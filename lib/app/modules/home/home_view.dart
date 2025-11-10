@@ -30,6 +30,7 @@ class HomeView extends StatelessWidget {
   final String facebookUrl = "https://www.facebook.com/greenekart";
   final String youtubeUrl = "https://youtube.com/@greenekart2626?si=PM9kj_cYg8Y08l6T";
   final String whatsappUrl = "https://wa.me/+918295282656";
+  final String instagramUrl = "https://www.instagram.com/greekekart?igsh=YW1kcWRubmNrYXNm";
 
   
 
@@ -67,6 +68,8 @@ class HomeView extends StatelessWidget {
                 _launchURL(youtubeUrl);
               } else if (value == 'whatsapp') {
                 _launchURL(whatsappUrl);
+              } else if (value == 'instagram') {
+                _launchURL(instagramUrl);
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -89,6 +92,13 @@ class HomeView extends StatelessWidget {
                 child: ListTile(
                   leading: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green),
                   title: Text('WhatsApp'),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'instagram',
+                child: ListTile(
+                  leading: FaIcon(FontAwesomeIcons.instagram, color: Colors.purple),
+                  title: Text('instagram'),
                 ),
               ),
             ],

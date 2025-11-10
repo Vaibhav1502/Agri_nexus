@@ -140,13 +140,13 @@ class OrderView extends StatelessWidget {
                         ),
 
                         // --- TRAILING: Details Button ---
-                        // trailing: const Icon(Icons.chevron_right),
-                        // onTap: () {
-                        //    Get.toNamed('/order-detail', arguments: order.orderNumber);
-                        //   // TODO: Navigate to Order Detail View
-                        //   // Get.toNamed('/order-detail', arguments: order.orderNumber);
-                        //  // Get.snackbar("Coming Soon", "Order detail page is under development.");
-                        // },
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () {
+                           Get.toNamed('/order-detail', arguments: order.orderNumber);
+                          // TODO: Navigate to Order Detail View
+                          // Get.toNamed('/order-detail', arguments: order.orderNumber);
+                         // Get.snackbar("Coming Soon", "Order detail page is under development.");
+                        },
                       ),
                     ),
                   );

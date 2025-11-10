@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'register_controller.dart';
+import 'package:flutter/services.dart';
 
 class RegisterView extends StatelessWidget {
   final controller = Get.put(RegisterController());
@@ -88,21 +89,57 @@ class RegisterView extends StatelessWidget {
                         ),
                         const SizedBox(height: 15),
                         TextField(
-                          controller: phoneController,
-                          decoration: const InputDecoration(
-                            hintText: "Phone Number",
-                            prefixIcon: Icon(Icons.phone_outlined),
-                          ),
-                        ),
+            controller: phoneController,
+            decoration: const InputDecoration(
+              hintText: "Phone Number",
+              prefixIcon: Icon(Icons.phone_outlined),
+              counterText: "", // Hide the default character counter
+            ),
+            // Set keyboard type to phone for a better user experience
+            keyboardType: TextInputType.phone,
+            // Enforce a 10-character limit
+            maxLength: 10,
+            // Allow only digits to be entered
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+          ),
+                        // TextField(
+                        //   controller: phoneController,
+                        //   decoration: const InputDecoration(
+                        //     hintText: "Phone Number",
+                        //     prefixIcon: Icon(Icons.phone_outlined),
+                        //   ),
+                        // ),
                         const SizedBox(height: 15),
-                        TextField(
-                          controller: passwordController,
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            hintText: "Password",
-                            prefixIcon: Icon(Icons.lock_outline),
-                          ),
-                        ),
+                         TextField(
+            controller: passwordController,
+            // Bind obscureText to the controller's state
+            obscureText: controller.isPasswordHidden.value,
+            decoration: InputDecoration(
+              hintText: "Password",
+              prefixIcon: const Icon(Icons.lock_outline),
+              // Add the show/hide toggle icon
+              suffixIcon: IconButton(
+                icon: Icon(
+                  controller.isPasswordHidden.value
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                ),
+                onPressed: () {
+                  controller.togglePasswordVisibility();
+                },
+              ),
+            ),
+          ),
+                        // TextField(
+                        //   controller: passwordController,
+                        //   obscureText: true,
+                        //   decoration: const InputDecoration(
+                        //     hintText: "Password",
+                        //     prefixIcon: Icon(Icons.lock_outline),
+                        //   ),
+                        // ),
                         const SizedBox(height: 15),
                         // DropdownButtonFormField<String>(
                         //   value: role.value,

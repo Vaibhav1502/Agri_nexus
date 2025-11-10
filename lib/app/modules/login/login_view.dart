@@ -77,14 +77,36 @@ class LoginView extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        TextField(
-                          controller: passwordController,
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            hintText: "Password",
-                            prefixIcon: Icon(Icons.lock_outline),
-                          ),
-                        ),
+                         TextField(
+            controller: passwordController,
+            // 1. Bind obscureText to the controller's state
+            obscureText: controller.isPasswordHidden.value,
+            decoration: InputDecoration(
+              hintText: "Password",
+              prefixIcon: const Icon(Icons.lock_outline),
+              // 2. Add a suffixIcon with a tappable icon
+              suffixIcon: IconButton(
+                icon: Icon(
+                  // Choose the icon based on the state
+                  controller.isPasswordHidden.value
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                ),
+                onPressed: () {
+                  // 3. Call the toggle method on press
+                  controller.togglePasswordVisibility();
+                },
+              ),
+            ),
+          ),
+                        // TextField(
+                        //   controller: passwordController,
+                        //   obscureText: true,
+                        //   decoration: const InputDecoration(
+                        //     hintText: "Password",
+                        //     prefixIcon: Icon(Icons.lock_outline),
+                        //   ),
+                        // ),
                         const SizedBox(height: 30),
                         controller.isLoading.value
                             ? const CircularProgressIndicator()

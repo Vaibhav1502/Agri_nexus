@@ -16,6 +16,17 @@ class LoginController extends GetxController {
   final authController = Get.find<AuthController>(); // 👈 Get instance of AuthController
   final profileController = Get.find<ProfileController>(); // Find the permanent instance
 
+    // 👇 --- THIS IS THE FIX --- 👇
+  // 1. Add an observable boolean to track password visibility.
+  //    Initialize it to `true` to hide the password by default.
+  var isPasswordHidden = true.obs;
+
+  // 2. Create a method to toggle the state.
+  void togglePasswordVisibility() {
+    isPasswordHidden.value = !isPasswordHidden.value;
+  }
+  // 👆 --- END OF FIX --- 👆
+
   Future<void> loginUser({
     required String email,
     required String password,

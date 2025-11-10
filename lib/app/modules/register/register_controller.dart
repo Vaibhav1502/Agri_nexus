@@ -8,6 +8,12 @@ class RegisterController extends GetxController {
   var isLoading = false.obs;
   final storageService = StorageService();
 
+  var isPasswordHidden = true.obs;
+
+  void togglePasswordVisibility() {
+    isPasswordHidden.value = !isPasswordHidden.value;
+  }
+
   Future<void> registerUser({
     required String name,
     required String email,
@@ -15,6 +21,12 @@ class RegisterController extends GetxController {
     required String phone,
     required String role,
   }) async {
+     if (phone.length != 10) {
+      Get.snackbar("Error", "Phone number must be 10 digits.");
+      // We might want to stop the loading indicator if validation fails early.
+      isLoading.value = false;
+      return;
+    }
     isLoading.value = true;
 
     final url = Uri.parse('https://nexus.heuristictechpark.com/api/v1/register');
