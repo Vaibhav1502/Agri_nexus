@@ -135,6 +135,7 @@ class ProductDetailView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                    
                       Text(
                         product.name,
                         style: const TextStyle(
@@ -144,7 +145,17 @@ class ProductDetailView extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
+                        "Slug: ${product.slug ?? 'N/A'}",
+                        style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
                         "Brand: ${product.brand ?? 'N/A'}",
+                        style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "Short Description: ${product.shortDescription ?? 'N/A'}",
                         style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
                       ),
                     ],
@@ -159,6 +170,11 @@ class ProductDetailView extends StatelessWidget {
                       onTap: () => _onShare(context, product.name, product.id),
                     ),
                     const SizedBox(width: 8),
+                    //    Image.network(product.images?[0]??'',
+                    // width: 150,
+                    // height: 150,
+                    // fit: BoxFit.cover),
+                   
                     // _buildSocialIcon(
                     //   Icons.wechat, // Placeholder for WhatsApp, as there's no direct icon
                     //   onTap: () => _onShare(context, product.name, product.id),
@@ -172,10 +188,10 @@ class ProductDetailView extends StatelessWidget {
                     // --- Price Section ---
                     Card(
                       elevation: 2,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       color: Colors.green.shade50,
                       child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
                             Text(
@@ -186,7 +202,8 @@ class ProductDetailView extends StatelessWidget {
                                 fontSize: 28,
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            Spacer(),
+                            //const SizedBox(width: 16),
                             if (product.displayOriginalPrice > product.displayPrice)
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,10 +244,13 @@ class ProductDetailView extends StatelessWidget {
                     // You can add more details here in a structured way
                     _buildDetailRow("Power Source:", product.power_source ?? 'N/A'),
                     _buildDetailRow("Category:", product.categoryName ?? 'N/A'),
-                    _buildDetailRow("Stock Quantity:", product.stock_quantity.toString()),
-                    _buildDetailRow("warranty", product.warranty.toString()),
-                    _buildDetailRow("Weight", product.weight.toString()),
-                    _buildDetailRow("Dimensions", product.dimensions.toString()),
+                    _buildDetailRow("Model:", product.model ?? 'N/A'),
+                    _buildDetailRow("Sku", product.sku ?? 'N/A'),
+                    _buildDetailRow("Stock Quantity:", product.stock_quantity?.toString() ?? 'N/A'),
+                    _buildDetailRow("warranty", product.warranty?.toString() ?? 'N/A'),
+                    _buildDetailRow("Weight", product.weight?.toString()?? 'N/A'),
+                    _buildDetailRow("Dimensions", product.dimensions?.toString()?? 'N/A'),
+                    
                    
                     
                     const Divider(height: 40, thickness: 1),

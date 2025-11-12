@@ -140,7 +140,7 @@ class OrderView extends StatelessWidget {
                         ),
 
                         // --- TRAILING: Details Button ---
-                        trailing: const Icon(Icons.chevron_right),
+                        //trailing: const Icon(Icons.chevron_right,size: 13,),
                         onTap: () {
                            Get.toNamed('/order-detail', arguments: order.orderNumber);
                           // TODO: Navigate to Order Detail View

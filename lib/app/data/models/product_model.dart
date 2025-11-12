@@ -16,7 +16,6 @@ class Product {
   final String? brand;
   final String? categoryName;
   final Subcategory? subcategory;
-
   final int discountPercentage;
   final List<Product> relatedProducts; // 👈 Added this
   final String? power_source;
@@ -24,6 +23,11 @@ class Product {
   final String? warranty;
   final String? weight;
   final String? dimensions;
+  final String? slug;
+  final String? sku;
+  final String? model;
+  final dynamic images;
+  
 
   // 👇 Smart getter to get the correct price based on user role
   double get displayPrice {
@@ -70,13 +74,21 @@ class Product {
     this.stock_quantity,
     this.warranty,
     this.weight,
-    this.dimensions
+    this.dimensions,
+    this.slug,
+    this.sku,
+    this.model,
+    this.images
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json["id"],
       name: json["name"] ?? "",
+      slug: json["slug"],
+      sku: json["sku"],
+      model: json["model"],
+      images: json["images"],
       description: json["description"],
       power_source: json["power_source"],
       warranty: json["warranty"],
