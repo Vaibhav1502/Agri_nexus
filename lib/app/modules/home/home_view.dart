@@ -27,10 +27,10 @@ class HomeView extends StatelessWidget {
   final authController = Get.find<AuthController>(); // Add this line
    final networkController = Get.find<NetworkController>();
 
-  final String facebookUrl = "https://www.facebook.com/greenekart";
-  final String youtubeUrl = "https://youtube.com/@greenekart2626?si=PM9kj_cYg8Y08l6T";
-  final String whatsappUrl = "https://wa.me/+918295282656";
-  final String instagramUrl = "https://www.instagram.com/greekekart?igsh=YW1kcWRubmNrYXNm";
+  // final String facebookUrl = "https://www.facebook.com/greenekart";
+  // final String youtubeUrl = "https://youtube.com/@greenekart2626?si=PM9kj_cYg8Y08l6T";
+  // final String whatsappUrl = "https://wa.me/+918295282656";
+  // final String instagramUrl = "https://www.instagram.com/greekekart?igsh=YW1kcWRubmNrYXNm";
 
   
 
@@ -42,68 +42,72 @@ class HomeView extends StatelessWidget {
     "https://img.freepik.com/free-vector/hand-drawn-agriculture-company-template_23-2149682583.jpg?semt=ais_hybrid&w=740&q=80",
   ];
 
-   Future<void> _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      Get.snackbar("Error", "Could not open the link.");
-    }
-  }
+  //  Future<void> _launchURL(String url) async {
+  //   final Uri uri = Uri.parse(url);
+  //   if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+  //     Get.snackbar("Error", "Could not open the link.");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: (){}, 
+          icon: Image.asset(  
+            'assets/logo.png',)),
         title: const Text("Green Leaf",style: TextStyle(fontSize: 30),),
         centerTitle: true,
         //backgroundColor: Colors.green,
         elevation: 0,
-          actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert), // The three-dot icon
-            onSelected: (value) {
-              // Handle the selection
-              if (value == 'facebook') {
-                _launchURL(facebookUrl);
-              } else if (value == 'youtube') {
-                _launchURL(youtubeUrl);
-              } else if (value == 'whatsapp') {
-                _launchURL(whatsappUrl);
-              } else if (value == 'instagram') {
-                _launchURL(instagramUrl);
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'facebook',
-                child: ListTile(
-                  leading: FaIcon(FontAwesomeIcons.facebook, color: Colors.blue),
-                  title: Text('Facebook'),
-                ),
-              ),
-              const PopupMenuItem<String>(
-                value: 'youtube',
-                child: ListTile(
-                  leading: FaIcon(FontAwesomeIcons.youtube, color: Colors.red),
-                  title: Text('YouTube'),
-                ),
-              ),
-              const PopupMenuItem<String>(
-                value: 'whatsapp',
-                child: ListTile(
-                  leading: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green),
-                  title: Text('WhatsApp'),
-                ),
-              ),
-              const PopupMenuItem<String>(
-                value: 'instagram',
-                child: ListTile(
-                  leading: FaIcon(FontAwesomeIcons.instagram, color: Colors.purple),
-                  title: Text('instagram'),
-                ),
-              ),
-            ],
-          ),
-        ],
+        //   actions: [
+        //   PopupMenuButton<String>(
+        //     icon: const Icon(Icons.more_vert), // The three-dot icon
+        //     onSelected: (value) {
+        //       // Handle the selection
+        //       if (value == 'facebook') {
+        //         _launchURL(facebookUrl);
+        //       } else if (value == 'youtube') {
+        //         _launchURL(youtubeUrl);
+        //       } else if (value == 'whatsapp') {
+        //         _launchURL(whatsappUrl);
+        //       } else if (value == 'instagram') {
+        //         _launchURL(instagramUrl);
+        //       }
+        //     },
+        //     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        //       const PopupMenuItem<String>(
+        //         value: 'facebook',
+        //         child: ListTile(
+        //           leading: FaIcon(FontAwesomeIcons.facebook, color: Colors.blue),
+        //           title: Text('Facebook'),
+        //         ),
+        //       ),
+        //       const PopupMenuItem<String>(
+        //         value: 'youtube',
+        //         child: ListTile(
+        //           leading: FaIcon(FontAwesomeIcons.youtube, color: Colors.red),
+        //           title: Text('YouTube'),
+        //         ),
+        //       ),
+        //       const PopupMenuItem<String>(
+        //         value: 'whatsapp',
+        //         child: ListTile(
+        //           leading: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.green),
+        //           title: Text('WhatsApp'),
+        //         ),
+        //       ),
+        //       const PopupMenuItem<String>(
+        //         value: 'instagram',
+        //         child: ListTile(
+        //           leading: FaIcon(FontAwesomeIcons.instagram, color: Colors.purple),
+        //           title: Text('instagram'),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ],
       ),
       body: Obx((){
          if (!networkController.isOnline.value) {

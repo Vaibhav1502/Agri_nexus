@@ -26,7 +26,7 @@ class Product {
   final String? slug;
   final String? sku;
   final String? model;
-  final dynamic images;
+  final List<String> images;
   
 
   // 👇 Smart getter to get the correct price based on user role
@@ -78,17 +78,23 @@ class Product {
     this.slug,
     this.sku,
     this.model,
-    this.images
+    this.images = const [],
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
+
+     List<String> galleryImages = [];
+    if (json['images'] != null && json['images'] is List) {
+      // Ensure all elements are strings
+      galleryImages = List<String>.from(json['images']);
+    }
     return Product(
       id: json["id"],
       name: json["name"] ?? "",
       slug: json["slug"],
       sku: json["sku"],
       model: json["model"],
-      images: json["images"],
+      images: galleryImages,
       description: json["description"],
       power_source: json["power_source"],
       warranty: json["warranty"],

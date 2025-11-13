@@ -8,6 +8,7 @@ class ProductDetailController extends GetxController {
   final authController = Get.find<AuthController>(); // 👈 GET an instance
   var product = Rxn<Product>();
   var isLoading = false.obs;
+   var selectedImage = ''.obs;
    int? _currentProductId; // 👈 Store the product ID
 
     @override
@@ -29,11 +30,17 @@ class ProductDetailController extends GetxController {
     try {
       isLoading.value = true;
       product.value = await _provider.fetchProductDetail(id);
+       if (product.value != null) {
+        selectedImage.value = product.value!.image ?? '';
+      }
        print("✅ Product detail fetched. Dealer price: ${product.value?.dealerSalePrice}");
     } catch (e) {
       Get.snackbar('Error', 'Failed to load product: $e');
     } finally {
       isLoading.value = false;
     }
+  }
+   void changeImage(String imageUrl) {
+    selectedImage.value = imageUrl;
   }
 }

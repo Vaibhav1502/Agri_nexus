@@ -105,19 +105,24 @@ class ProductDetailView extends StatelessWidget {
                 //   },
                 // ),
               ],
-              flexibleSpace: FlexibleSpaceBar(
-                background: Hero(
-                  tag: 'product_image_${product.id}', // For smooth animations from product list
-                  child: Image.network(
-                    product.image ?? '',
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: Colors.grey.shade200,
-                      child: const Icon(Icons.image_not_supported, color: Colors.grey),
-                    ),
-                  ),
-                ),
+               flexibleSpace: FlexibleSpaceBar(
+                background: Obx(() => AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: Hero(
+                        // Use the selectedImage as the key to trigger the animation
+                        key: ValueKey<String>(controller.selectedImage.value),
+                        tag: 'product_image_${product.id}',
+                        child: Image.network(
+                          controller.selectedImage.value, // Display the currently selected image
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                    )),
               ),
             ),
             SliverToBoxAdapter(
@@ -126,6 +131,48 @@ class ProductDetailView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                     if ((product.images).isNotEmpty)
+                      SizedBox(
+                        height: 70,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          // We include the main image in the thumbnail list for selection
+                          itemCount: [product.image, ...product.images].where((img) => img != null).length,
+                          itemBuilder: (context, index) {
+                            // Create a combined list of the primary image and gallery images
+                            final allImages = [product.image, ...product.images].whereType<String>().toList();
+                            final imageUrl = allImages[index];
+                            
+                            return GestureDetector(
+                              onTap: () => controller.changeImage(imageUrl),
+                              child: Obx(() {
+                                bool isSelected = controller.selectedImage.value == imageUrl;
+                                return Container(
+                                  width: 70,
+                                  margin: const EdgeInsets.only(right: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: isSelected ? Theme.of(context).primaryColor : Colors.grey.shade300,
+                                      width: isSelected ? 2.5 : 1.0,
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(6),
+                                    child: Image.network(
+                                      imageUrl,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => const Icon(Icons.hide_image_outlined),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            );
+                          },
+                        ),
+                      ),
+                    if ((product.images).isNotEmpty)
+                      const SizedBox(height: 20),
                     // --- Product Title and Brand ---
                     Row(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -45,6 +45,7 @@ dependencies:
   intl: ^0.18.1
   another_stepper: 
   font_awesome_flutter: ^10.6.0
+  flutter_speed_dial: ^7.0.0
 
 dev_dependencies:
   flutter_test:
