@@ -1,5 +1,6 @@
 // product_detail_view.dart
 
+import 'package:agri_nexus_ht/app/data/models/offer_model.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
 import 'package:flutter/material.dart';
@@ -277,6 +278,22 @@ class ProductDetailView extends StatelessWidget {
                         ),
                       ),
                     ),
+                     Obx(() {
+          // Only show this section if there are offers for this product
+          if (controller.productOffers.isEmpty) {
+            return const SizedBox.shrink();
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Divider(height: 40, thickness: 1),
+              _buildSectionTitle("Available Offers"),
+              const SizedBox(height: 12),
+              // Use a Column to list the offers vertically
+              ...controller.productOffers.map((offer) => _buildOfferListItem(offer)).toList(),
+            ],
+          );
+        }),
                     const Divider(height: 40, thickness: 1),
 
                     // --- Description and Details ---
@@ -331,6 +348,42 @@ class ProductDetailView extends StatelessWidget {
           ],
         );
       }),
+    );
+  }
+
+    Widget _buildOfferListItem(Offer offer) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.local_offer_outlined, color: Get.theme.primaryColor, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  offer.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                if (offer.description != null) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    offer.description!,
+                    style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

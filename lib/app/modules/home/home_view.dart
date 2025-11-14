@@ -1,8 +1,10 @@
 import 'package:agri_nexus_ht/app/controller/auth_controller.dart';
 import 'package:agri_nexus_ht/app/controller/network_controller.dart';
+import 'package:agri_nexus_ht/app/data/models/offer_model.dart';
 import 'package:agri_nexus_ht/app/modules/home/category_controller.dart';
 import 'package:agri_nexus_ht/app/modules/home/featured_product_controller.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
+import 'package:agri_nexus_ht/app/modules/home/offer_controller.dart';
 import 'package:agri_nexus_ht/app/modules/home/widgets/pending_approval_banner.dart';
 import 'package:agri_nexus_ht/app/modules/profile/profile_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
@@ -26,6 +28,7 @@ class HomeView extends StatelessWidget {
   final TextEditingController searchController = TextEditingController();
   final authController = Get.find<AuthController>(); // Add this line
    final networkController = Get.find<NetworkController>();
+   final offerController = Get.put(OfferController());
 
   // final String facebookUrl = "https://www.facebook.com/greenekart";
   // final String youtubeUrl = "https://youtube.com/@greenekart2626?si=PM9kj_cYg8Y08l6T";
@@ -116,6 +119,7 @@ class HomeView extends StatelessWidget {
         }
         return RefreshIndicator(
         onRefresh: () async {
+          await offerController.fetchOffers();
           await Get.find<ProfileController>().fetchAndUpdateUserProfile();
           await controller.fetchProducts();
           await featuredController.fetchFeaturedProducts();
@@ -127,6 +131,35 @@ class HomeView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Obx(() {
+                  if (offerController.offers.isEmpty) {
+                    return const SizedBox.shrink(); // Show nothing if no offers
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        child: Text(
+                          "Special Offers",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 150, // Adjust height as needed
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: offerController.offers.length,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          itemBuilder: (context, index) {
+                            final offer = offerController.offers[index];
+                            return _buildOfferCard(offer);
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                }),
                  
                  Obx(() {
                   // Show the banner only if the user is a pending dealer.
@@ -621,6 +654,100 @@ class HomeView extends StatelessWidget {
       })
     );
   }
+  Widget _buildOfferCard(Offer offer) {
+  return GestureDetector(
+    onTap: () {
+      // Navigate to the detail page, passing the offer's ID
+      Get.toNamed('/offer-detail', arguments: offer.id);
+    },
+    child: Container(
+      width: 300,
+      margin: const EdgeInsets.only(right: 12),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            // Use the 'bannerImage' field
+            if (offer.bannerImage != null)
+              Positioned.fill(
+                child: Image.network(
+                  offer.bannerImage!,
+                  fit: BoxFit.cover,
+                  color: Colors.black.withOpacity(0.5),
+                  colorBlendMode: BlendMode.darken,
+                  errorBuilder: (_, __, ___) => Container(color: Colors.teal),
+                ),
+              ),
+            if (offer.bannerImage == null)
+              Container(color: Colors.teal.shade700),
+            
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    offer.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+    
+                  if (offer.description != null)
+                    Text(
+                      offer.description!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 14),
+                    ),
+                  
+                  const Spacer(),
+    
+                  // Use the new `validityString` getter
+                  Row(
+                    children: [
+                      const Icon(Icons.timer_outlined, color: Colors.white70, size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        "Valid: ${offer.validityString}",
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            
+            // Use the new `discountString` getter
+            Positioned(
+              top: 10,
+              right: 10,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  offer.discountString, // Use the smart getter
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
   //  PopupMenuItem<String> _buildPopupMenuItem({
   //   required String title,
   //   required IconData icon,
@@ -640,4 +767,5 @@ class HomeView extends StatelessWidget {
   //     ),
   //   );
   // }
+}
 }

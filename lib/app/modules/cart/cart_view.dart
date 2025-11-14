@@ -139,85 +139,106 @@ class CartView extends StatelessWidget {
                 color: Colors.white,
                 boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _summaryRow("Subtotal", controller.subtotal.value),
-                  _summaryRow("Tax", controller.taxAmount.value),
-                  _summaryRow("Shipping", controller.shippingAmount.value),
-                  const Divider(),
-                  _summaryRow(
-                    "Total",
-                    controller.total.value,
-                    isBold: true,
-                    color: Colors.green,
-                  ),
-                  const SizedBox(height: 12),
-
-                  // ✅ Proceed to Checkout Button
-                  ElevatedButton(
-                    onPressed: () {
-                       Get.toNamed(AppRoutes.checkout);
-                      // TODO: Checkout flow
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+              child: Obx(()=>
+                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _summaryRow("Subtotal", controller.subtotal.value),
+                    // 👇 --- ADD THE NEW DISCOUNT ROW --- 👇
+                  if (controller.isCalculatingDiscount.value)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Applying best offer...", style: TextStyle(color: Colors.blue)),
+                          SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+                        ],
+                      ),
+                    )
+                  else if (controller.discountAmount.value > 0)
+                    _summaryRow(
+                      "Discount (${controller.appliedOfferTitle.value ?? 'Best Offer'})",
+                      -controller.discountAmount.value, // Show as negative
+                      color: Colors.green,
+                    ),
+                  // 👆 --- END OF DISCOUNT ROW --- 👆
+                    _summaryRow("Tax", controller.taxAmount.value),
+                    _summaryRow("Shipping", controller.shippingAmount.value),
+                    const Divider(),
+                    _summaryRow(
+                      "Total",
+                     (controller.total.value - controller.discountAmount.value),
+                      isBold: true,
+                      color: Colors.green,
+                    ),
+                    const SizedBox(height: 12),
+                
+                    // ✅ Proceed to Checkout Button
+                    ElevatedButton(
+                      onPressed: () {
+                         Get.toNamed(AppRoutes.checkout);
+                        // TODO: Checkout flow
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        "Proceed to Checkout",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    child: const Text(
-                      "Proceed to Checkout",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                
+                    const SizedBox(height: 10),
+                
+                    // 🧹 Clear Cart Button
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // 🧹 Clear Cart Button
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.redAccent,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      icon: const Icon(Icons.delete_forever, color: Colors.white),
+                      label: const Text(
+                        "Clear Cart",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    icon: const Icon(Icons.delete_forever, color: Colors.white),
-                    label: const Text(
-                      "Clear Cart",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      Get.defaultDialog(
-                        title: "Clear Cart",
-                        middleText:
-                            "Are you sure you want to remove all items from your cart?",
-                        confirm: ElevatedButton(
-                          onPressed: () {
-                            Get.back();
-                            controller.clearCart();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.redAccent,
+                      onPressed: () {
+                        Get.defaultDialog(
+                          title: "Clear Cart",
+                          middleText:
+                              "Are you sure you want to remove all items from your cart?",
+                          confirm: ElevatedButton(
+                            onPressed: () {
+                              Get.back();
+                              controller.clearCart();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent,
+                            ),
+                            child: const Text("Yes, Clear"),
                           ),
-                          child: const Text("Yes, Clear"),
-                        ),
-                        cancel: TextButton(
-                          onPressed: () => Get.back(),
-                          child: const Text("Cancel"),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                          cancel: TextButton(
+                            onPressed: () => Get.back(),
+                            child: const Text("Cancel"),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

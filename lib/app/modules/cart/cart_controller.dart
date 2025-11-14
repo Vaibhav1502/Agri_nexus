@@ -15,6 +15,11 @@ class CartController extends GetxController {
   var total = 0.0.obs;
   //var cartCount = 0.obs;
 
+  var discountAmount = 0.0.obs;
+  var finalAmountAfterDiscount = 0.0.obs;
+  var appliedOfferTitle = Rxn<String>(); // To store the name of the best offer
+  var isCalculatingDiscount = false.obs;
+
   int get cartCount => cartItems.length;
 
   /// 🛒 Fetch Cart Items
@@ -49,6 +54,14 @@ class CartController extends GetxController {
           shippingAmount.value =
               (cartData['shipping_amount'] ?? 0).toDouble();
           total.value = (cartData['total'] ?? 0).toDouble();
+           if (cartItems.isNotEmpty) {
+          calculateCartDiscounts();
+        } else {
+          // Reset discounts if cart is empty
+          discountAmount.value = 0.0;
+          finalAmountAfterDiscount.value = 0.0;
+          appliedOfferTitle.value = null;
+        }
         }else {
           // If the API call succeeds but reports no cart, clear everything.
           cartItems.clear();
@@ -65,6 +78,63 @@ class CartController extends GetxController {
       print("Error fetching cart: $e");
     } finally {
       isLoading(false);
+    }
+  }
+
+    Future<void> calculateCartDiscounts() async {
+    if (isCalculatingDiscount.value) return;
+
+    isCalculatingDiscount.value = true;
+    try {
+      final token = await storageService.getToken();
+      if (token == null) return;
+
+      double totalDiscount = 0.0;
+      String? bestOfferForCart;
+
+      // Note: This is inefficient. A single backend call for the whole cart is better.
+      // We are iterating through each item and calling the API.
+      for (var item in cartItems) {
+        final url = Uri.parse("https://nexus.heuristictechpark.com/api/v1/offers/calculate-discount");
+        final body = {
+          "product_id": item['product_id'],
+          "quantity": item['quantity'],
+          "amount": item['subtotal'],
+        };
+
+        final response = await http.post(
+          url,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode(body),
+        );
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          if (data['success'] == true && data['data'] != null) {
+            totalDiscount += (data['data']['discount_amount'] ?? 0.0);
+            // We can try to capture the best offer name
+            if (data['data']['best_offer'] != null) {
+              bestOfferForCart = data['data']['best_offer']['title'];
+            }
+          }
+        }
+      }
+
+      // Update the state with the calculated totals
+      discountAmount.value = totalDiscount;
+      finalAmountAfterDiscount.value = subtotal.value - totalDiscount; // Assuming discount is applied to subtotal
+      appliedOfferTitle.value = bestOfferForCart;
+
+      print("✅ Discount calculated. Amount: $totalDiscount");
+
+    } catch (e) {
+      print("Error calculating discount: $e");
+    } finally {
+      isCalculatingDiscount.value = false;
     }
   }
 

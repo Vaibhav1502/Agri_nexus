@@ -5,6 +5,7 @@ import 'package:agri_nexus_ht/app/modules/checkout/checkout_view.dart';
 import 'package:agri_nexus_ht/app/modules/home/category_detail_view.dart';
 import 'package:agri_nexus_ht/app/modules/home/home_view.dart';
 import 'package:agri_nexus_ht/app/modules/home/main_home_view.dart';
+import 'package:agri_nexus_ht/app/modules/offers/offer_detail_view.dart';
 import 'package:agri_nexus_ht/app/modules/orders/order_detail_view.dart';
 import 'package:agri_nexus_ht/app/modules/product_detail/product_detail_view.dart';
 import 'package:agri_nexus_ht/app/modules/splash/splash_view.dart';
@@ -26,6 +27,7 @@ class AppRoutes {
   static const orderDetail = '/order-detail';
   static const allCategories = '/all-categories';
   static const subcategoryDetail = '/subcategory-detail';
+   static const offerDetail = '/offer-detail';
 }
 
 class AppPages {
@@ -38,6 +40,7 @@ class AppPages {
     GetPage(name: AppRoutes.orderDetail, page: () => const OrderDetailView()),
     GetPage(name: AppRoutes.allCategories, page: () => const AllCategoriesView()),
     GetPage(name: AppRoutes.subcategoryDetail, page: () => SubcategoryDetailView()),
+    GetPage(name: AppRoutes.offerDetail, page: () => const OfferDetailView()),
     GetPage(
       name: '/product-detail',
       page: () => ProductDetailView(productId: Get.arguments),
