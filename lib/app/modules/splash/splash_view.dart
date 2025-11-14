@@ -8,14 +8,14 @@ class SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.green.shade600,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset("assets/logo.png", width: 250, height: 250,fit: BoxFit.fill,),
             //const Icon(Icons.agriculture, color: Colors.white, size: 80),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             Text(
               "Nexus Agriculture",
               style: TextStyle(
@@ -24,8 +24,8 @@ class SplashView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
-             CircularProgressIndicator(color: Colors.green.shade600),
+            const SizedBox(height: 30),
+             CircularProgressIndicator(color: Colors.white),
           ],
         ),
       ),

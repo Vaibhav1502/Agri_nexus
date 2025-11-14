@@ -54,9 +54,10 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          
           onPressed: (){}, 
           icon: Image.asset(  
-            'assets/logo.png',)),
+            'assets/logo.png',scale: 1,)),
         title: const Text("Green Leaf",style: TextStyle(fontSize: 30),),
         centerTitle: true,
         //backgroundColor: Colors.green,
