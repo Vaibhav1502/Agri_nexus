@@ -15,6 +15,9 @@ class Offer {
   final DateTime? startDate;
   final DateTime? endDate;
   final bool isValid;
+  final String? status;
+   final bool forCustomers;
+  final bool forDealers;
 
   Offer({
     required this.id,
@@ -26,7 +29,11 @@ class Offer {
     required this.discountValue,
     this.startDate,
     this.endDate,
+    required this.status,
     required this.isValid,
+    required this.forCustomers, // Add to constructor
+    required this.forDealers,  // Add to constructor
+   
   });
 
   // Helper getter to create the formatted validity string
@@ -62,6 +69,9 @@ class Offer {
       startDate: json['start_date'] != null ? DateTime.tryParse(json['start_date']) : null,
       endDate: json['end_date'] != null ? DateTime.tryParse(json['end_date']) : null,
       isValid: json['is_valid'] ?? false,
+       forCustomers: json['for_customers'] ?? false,
+      forDealers: json['for_dealers'] ?? false,
+      status: json['status'],
     );
   }
 }
