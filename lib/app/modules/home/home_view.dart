@@ -131,35 +131,72 @@ class HomeView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Obx(() {
-                  if (offerController.offers.isEmpty) {
-                    return const SizedBox.shrink(); // Show nothing if no offers
-                  }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                        child: Text(
-                          "Special Offers",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
+                // 🔍 Search Bar
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: "Search products...",
+                      prefixIcon: const Icon(Icons.search, color: Colors.green),
+                      suffixIcon: Obx(
+                        () => controller.isSearching.value
+                            ? IconButton(
+                                icon: const Icon(Icons.close, color: Colors.red),
+                                onPressed: () {
+                                  searchController.clear();
+                                  controller.clearSearch();
+                                },
+                              )
+                            : const SizedBox.shrink(),
                       ),
-                      SizedBox(
-                        height: 150, // Adjust height as needed
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: offerController.offers.length,
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          itemBuilder: (context, index) {
-                            final offer = offerController.offers[index];
-                            return _buildOfferCard(offer);
-                          },
-                        ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.green),
                       ),
-                    ],
-                  );
-                }),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.green, width: 1.5),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                    ),
+                    onSubmitted: (query) {
+                      if (query.trim().isNotEmpty) {
+                        controller.searchProducts(query);
+                      }
+                    },
+                  ),
+                ),
+                // Obx(() {
+                //   if (offerController.offers.isEmpty) {
+                //     return const SizedBox.shrink(); // Show nothing if no offers
+                //   }
+                //   return Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       const Padding(
+                //         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                //         child: Text(
+                //           "Special Offers",
+                //           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         height: 150, // Adjust height as needed
+                //         child: ListView.builder(
+                //           scrollDirection: Axis.horizontal,
+                //           itemCount: offerController.offers.length,
+                //           padding: const EdgeInsets.symmetric(horizontal: 12),
+                //           itemBuilder: (context, index) {
+                //             final offer = offerController.offers[index];
+                //             return _buildOfferCard(offer);
+                //           },
+                //         ),
+                //       ),
+                //     ],
+                //   );
+                // }),
                  
                  Obx(() {
                   // Show the banner only if the user is a pending dealer.
@@ -310,43 +347,7 @@ class HomeView extends StatelessWidget {
                   );
                 }),
 
-                // 🔍 Search Bar
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: TextField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      hintText: "Search products...",
-                      prefixIcon: const Icon(Icons.search, color: Colors.green),
-                      suffixIcon: Obx(
-                        () => controller.isSearching.value
-                            ? IconButton(
-                                icon: const Icon(Icons.close, color: Colors.red),
-                                onPressed: () {
-                                  searchController.clear();
-                                  controller.clearSearch();
-                                },
-                              )
-                            : const SizedBox.shrink(),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.green),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.green, width: 1.5),
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey.shade100,
-                    ),
-                    onSubmitted: (query) {
-                      if (query.trim().isNotEmpty) {
-                        controller.searchProducts(query);
-                      }
-                    },
-                  ),
-                ),
+                
 
                 // 🌟 Featured Products Section
                 Padding(

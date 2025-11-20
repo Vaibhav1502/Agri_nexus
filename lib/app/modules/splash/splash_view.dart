@@ -17,7 +17,7 @@ class SplashView extends StatelessWidget {
             //const Icon(Icons.agriculture, color: Colors.white, size: 80),
             const SizedBox(height: 40),
             Text(
-              "Nexus Agriculture",
+              "Green Leaf",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,

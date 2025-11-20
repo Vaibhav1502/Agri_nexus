@@ -11,11 +11,12 @@ import 'product_detail_controller.dart';
 class ProductDetailView extends StatelessWidget {
   final int productId;
   ProductDetailView({required this.productId, super.key});
-
+ 
+   //final ProductDetailController controller = Get.find();
   // It's better to find existing controllers than to create new ones here
-  final controller = Get.put(ProductDetailController());
-  final cartController = Get.find<CartController>();
-  final wishlistController = Get.find<WishlistController>();
+//  final controller = Get.put(ProductDetailController());
+//   final cartController = Get.find<CartController>();
+//   final wishlistController = Get.find<WishlistController>();
 
   void _onShare(BuildContext context, String productName, int productId) {
     // In a real app, you would create a dynamic link or a URL to your product page.
@@ -28,6 +29,13 @@ class ProductDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+       //Use the product ID as a unique tag
+    
+      final controller = Get.find<ProductDetailController>();
+    // Find the other global controllers
+    final cartController = Get.find<CartController>();
+    final wishlistController = Get.find<WishlistController>();
+     
     // Load the product data when the widget is built
     controller.loadProduct(productId);
 
@@ -331,6 +339,7 @@ class ProductDetailView extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final related = product.relatedProducts[index];
                             return _buildRelatedProductCard(related);
+                            
                           },
                         ),
                       )
@@ -439,7 +448,12 @@ class ProductDetailView extends StatelessWidget {
   // Helper widget for building a single related product card
   Widget _buildRelatedProductCard(dynamic related) {
     return GestureDetector(
-      onTap: () => Get.off(() => ProductDetailView(productId: related.id)), // Use Get.off to avoid building up a stack
+      onTap: () {
+        final controller = Get.find<ProductDetailController>();
+      controller.loadProduct(related.id);       // reload data
+     Get.offNamed('/product-detail', arguments: related.id);
+      }, // Use Get.off to avoid building up a stack
+      
       child: Container(
         width: 150,
         margin: const EdgeInsets.only(right: 12),

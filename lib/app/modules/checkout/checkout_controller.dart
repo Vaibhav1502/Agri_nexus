@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:agri_nexus_ht/app/controller/auth_controller.dart';
 import 'package:agri_nexus_ht/app/controller/network_controller.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
+import 'package:agri_nexus_ht/app/modules/home/home_controller.dart';
 import 'package:agri_nexus_ht/app/routes/app_pages.dart';
 import 'package:agri_nexus_ht/app/services/storage_service.dart';
 import 'package:flutter/material.dart';
@@ -109,12 +110,18 @@ class CheckoutController extends GetxController {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-
+          await cartController.clearCart();
+          
         // Clear the cart and navigate to the home or orders screen
-         Future.delayed(const Duration(seconds: 2), () {
-      Get.offAllNamed(AppRoutes.home);
-    }); // Or navigate to your orders page
-        
+        await Future.delayed(const Duration(seconds: 2));
+
+Get.offAllNamed(AppRoutes.home);
+
+// FIX: reset bottom nav to Home tab
+Future.delayed(Duration(milliseconds: 200), () {
+  final homeController = Get.find<HomeController>();
+  homeController.changeTab(0);
+});
       } else {
         // Handle errors, like an empty cart
         Get.snackbar(
@@ -130,4 +137,6 @@ class CheckoutController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  
 }

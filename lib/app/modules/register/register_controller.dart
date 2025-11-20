@@ -48,15 +48,14 @@ class RegisterController extends GetxController {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200 && data["success"] == true) {
+      if ((response.statusCode == 200 || response.statusCode == 201) && data["success"] == true) {
         final token = data["data"]["token"];
         await storageService.saveToken(token);
 
         Get.snackbar("Success", "Registration Successful!");
         // 👇 Navigate to login screen
-        Future.delayed(const Duration(seconds: 1), () {
-          Get.offAllNamed(AppRoutes.login);
-        });
+        await Future.delayed(const Duration(seconds: 2)); // Give user time to see snackbar
+        Get.offNamed(AppRoutes.login);
       } else {
         Get.snackbar("Error", data["message"] ?? "Registration failed");
       }

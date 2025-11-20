@@ -91,7 +91,7 @@ class CheckoutView extends StatelessWidget {
                   )),
               const Divider(height: 40),
 
-              _buildSectionTitle("Additional Notes (Optional)"),
+              _buildSectionTitle("Additional Notes"),
               const SizedBox(height: 16),
               TextFormField(
                 controller: controller.notesController,

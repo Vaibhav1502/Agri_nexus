@@ -18,6 +18,8 @@ class Order {
   final double taxAmount;
   final double shippingAmount;
   final String? notes;
+ 
+  
 
 
   Order({
@@ -36,11 +38,37 @@ class Order {
     required this.taxAmount,
     required this.shippingAmount,
     this.notes,
+   
+    
   });
+
+  // 👇 --- THIS IS THE NEW, SIMPLIFIED LOGIC --- 👇
+  
+  /// Calculates the total discount amount for the order by summing item discounts.
+  double get totalDiscount {
+    if (items.isEmpty) return 0.0;
+    // Sum the `discount_amount` from each item in the order.
+    return items.fold(0.0, (sum, item) => sum + item.discountAmount);
+  }
+
+  /// Calculates the total original price before any discounts.
+  double get originalSubtotal {
+    // It's simply the final subtotal plus the total discount.
+    return subtotal + totalDiscount;
+  }
+  
+  // 👆 --- END OF NEW LOGIC --- 👆
 
   // A helper getter to format the date nicely
   String get formattedDate {
-    return DateFormat('MMM dd, yyyy - hh:mm a').format(createdAt);
+    // 1. Get the DateTime object.
+    final dateTime = createdAt;
+    
+    // 2. Convert it from UTC to the device's local time zone.
+    final localDateTime = dateTime.toLocal();
+    
+    // 3. Format the local time for display.
+    return DateFormat('MMM dd, yyyy - hh:mm a').format(localDateTime);
   }
 
   // A helper getter to get the first product image for the list view
@@ -83,6 +111,8 @@ class Order {
       taxAmount: (json['tax_amount'] ?? 0.0).toDouble(),
       shippingAmount: (json['shipping_amount'] ?? 0.0).toDouble(),
       notes: json['notes'],
+      
+
     );
   }
 }
@@ -92,9 +122,12 @@ class OrderItem {
   final String? image;
    final int quantity;
   final double price;
+   final double? originalPrice; // The price before discount
+  final double discountAmount; // The amount saved on this item
   final double total;
+   final String? offerTitle;
 
-  OrderItem({required this.productName, this.image,required this.quantity, required this.price,required this.total,});
+  OrderItem({required this.productName, this.image,required this.quantity, required this.price,required this.total,this.originalPrice,required this.discountAmount,this.offerTitle,});
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
@@ -102,7 +135,11 @@ class OrderItem {
       image: json['image'],
       quantity: json['quantity'] ?? 0,
       price: (json['price'] ?? 0.0).toDouble(),
+      // Use original_price if it exists, otherwise fall back to price
+      originalPrice: (json['original_price'] ?? json['price'] ?? 0.0).toDouble(),
+      discountAmount: (json['discount_amount'] ?? 0.0).toDouble(), // 👈 PARSE this
       total: (json['total'] ?? 0.0).toDouble(),
+      offerTitle: json['offer']?['title'], // 👈 PARSE the nested offer title
     );
   }
 }

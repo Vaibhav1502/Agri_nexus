@@ -1,12 +1,15 @@
 import 'package:agri_nexus_ht/app/data/models/role_selection/role_selection_view.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_view.dart';
 import 'package:agri_nexus_ht/app/modules/categories/all_categories_view.dart';
+import 'package:agri_nexus_ht/app/modules/categories/subcategory_list_view.dart';
 import 'package:agri_nexus_ht/app/modules/checkout/checkout_view.dart';
 import 'package:agri_nexus_ht/app/modules/home/category_detail_view.dart';
 import 'package:agri_nexus_ht/app/modules/home/home_view.dart';
 import 'package:agri_nexus_ht/app/modules/home/main_home_view.dart';
 import 'package:agri_nexus_ht/app/modules/offers/offer_detail_view.dart';
 import 'package:agri_nexus_ht/app/modules/orders/order_detail_view.dart';
+import 'package:agri_nexus_ht/app/modules/product_detail/product_detail_binding.dart';
+
 import 'package:agri_nexus_ht/app/modules/product_detail/product_detail_view.dart';
 import 'package:agri_nexus_ht/app/modules/splash/splash_view.dart';
 import 'package:agri_nexus_ht/app/modules/subcategories/subcategory_detail_view.dart';
@@ -28,6 +31,7 @@ class AppRoutes {
   static const allCategories = '/all-categories';
   static const subcategoryDetail = '/subcategory-detail';
    static const offerDetail = '/offer-detail';
+    static const subcategoryList = '/subcategory-list';
 }
 
 class AppPages {
@@ -39,14 +43,19 @@ class AppPages {
     GetPage(name: AppRoutes.home, page: () => MainHomeView()),
     GetPage(name: AppRoutes.orderDetail, page: () => const OrderDetailView()),
     GetPage(name: AppRoutes.allCategories, page: () => const AllCategoriesView()),
+    GetPage(name: AppRoutes.subcategoryList, page: () => const SubcategoryListView()), 
     GetPage(name: AppRoutes.subcategoryDetail, page: () => SubcategoryDetailView()),
     GetPage(name: AppRoutes.offerDetail, page: () => const OfferDetailView()),
+    
     GetPage(
       name: '/product-detail',
       page: () => ProductDetailView(productId: Get.arguments),
+      binding: ProductDetailBinding(),
     ),
     GetPage(name: AppRoutes.categoryDetail, page: () => CategoryDetailView()),
     GetPage(name: AppRoutes.cart, page: () => CartView()),
     GetPage(name: AppRoutes.checkout, page: () => const CheckoutView()),
+
+     
   ];
 }

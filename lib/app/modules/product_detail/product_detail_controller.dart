@@ -17,6 +17,12 @@ class ProductDetailController extends GetxController {
    int? _currentProductId; // 👈 Store the product ID
 
     @override
+  void onClose() {
+    print("Disposing ProductDetailController for product: ${product.value?.name}");
+    super.onClose();
+  }
+
+    @override
   void onInit() {
     super.onInit();
     // 👇 ADD LISTENER

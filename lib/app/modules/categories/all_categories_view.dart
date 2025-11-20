@@ -1,5 +1,6 @@
 // app/modules/categories/all_categories_view.dart
 
+import 'package:agri_nexus_ht/app/data/models/category_model.dart';
 import 'package:agri_nexus_ht/app/modules/home/category_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,93 +27,76 @@ class AllCategoriesView extends StatelessWidget {
 
         return RefreshIndicator(
           onRefresh: () => controller.fetchCategories(),
-          child: ListView.builder(
-            padding: const EdgeInsets.all(12.0),
+          child: GridView.builder(
+            padding: const EdgeInsets.all(16.0),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // 2 cards per row
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 1.0, // Makes the cards square
+            ),
             itemCount: controller.categories.length,
             itemBuilder: (context, index) {
               final category = controller.categories[index];
-
-              // If a category has no subcategories, use a clean Card with a ListTile
-              if (category.subcategories.isEmpty) {
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                      child: Icon(
-                        Icons.label_important_outline,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    title: Text(category.name, style: const TextStyle(fontWeight: FontWeight.w500)),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      if (category.slug != null && category.slug!.isNotEmpty) {
-                        Get.toNamed('/category-detail', arguments: category.slug);
-                      }
-                    },
-                  ),
-                );
-              }
-
-              // If it has subcategories, use a Card with an ExpansionTile
-              return Card(
-                margin: const EdgeInsets.only(bottom: 10),
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                clipBehavior: Clip.antiAlias, // Ensures child widgets respect the card's shape
-                child: ExpansionTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                    child: Icon(
-                      Icons.category_rounded,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  title: Text(
-                    category.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  // Custom expansion icons for a cleaner look
-                  trailing: const Icon(Icons.add),
-                  onExpansionChanged: (isExpanded) {
-                    // This is for animating the icon, but ExpansionTile handles it by default
-                  },
-                  children: [
-                    // A container to give subcategories a distinct background and padding
-                    Container(
-                      color: Colors.grey.shade100,
-                      child: Column(
-                        children: category.subcategories.map((subcategory) {
-                          return ListTile(
-                            contentPadding: const EdgeInsets.only(left: 32.0, right: 16.0),
-                            title: Text(subcategory.name),
-                            trailing: const Icon(Icons.chevron_right, size: 20),
-                            onTap: () {
-                              final slug = subcategory.slug;
-                              if (slug != null && slug.isNotEmpty) {
-                                Get.toNamed('/subcategory-detail', arguments: slug);
-                              } else {
-                                Get.snackbar("Error", "This subcategory cannot be opened.");
-                              }
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ],
-                ),
-              );
+              return _buildCategoryCard(category);
             },
           ),
         );
       }),
+    );
+  }
+
+  // Helper widget for building a single category card
+  Widget _buildCategoryCard(Category category) {
+    return GestureDetector(
+      onTap: () {
+        // If the category has subcategories, navigate to the new subcategory list screen
+        if (category.subcategories.isNotEmpty) {
+          Get.toNamed('/subcategory-list', arguments: category);
+        } 
+        // Otherwise, navigate directly to the product detail page for that category
+        else {
+          if (category.slug != null && category.slug!.isNotEmpty) {
+            Get.toNamed('/category-detail', arguments: category.slug);
+          }
+        }
+      },
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 35,
+              backgroundColor: Get.theme.primaryColor.withOpacity(0.1),
+              child: Icon(
+                Icons.category_rounded, // Placeholder icon
+                size: 35,
+                color: Get.theme.primaryColor,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                category.name,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            // Show a small indicator if there are subcategories
+            if (category.subcategories.isNotEmpty)
+              const Icon(Icons.arrow_drop_down, color: Colors.grey)
+          ],
+        ),
+      ),
     );
   }
 }

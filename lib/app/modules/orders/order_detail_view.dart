@@ -119,6 +119,10 @@ class OrderDetailView extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            if (order.totalDiscount > 0) ...[
+            _buildPriceRow("Subtotal (Original)", order.originalSubtotal),
+            _buildPriceRow("Discount", -order.totalDiscount),
+          ],
             _buildPriceRow("Subtotal", order.subtotal),
             _buildPriceRow("Tax", order.taxAmount),
             _buildPriceRow("Shipping", order.shippingAmount),
