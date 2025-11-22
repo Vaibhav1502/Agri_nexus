@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../services/storage_service.dart';
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class LoginController extends GetxController {
   var isLoading = false.obs;
   final storageService = StorageService();
@@ -38,7 +40,7 @@ class LoginController extends GetxController {
       await storageService.clearUser();
       authController.clearUser();
 
-    final url = Uri.parse('https://nexus.heuristictechpark.com/api/v1/login');
+    final url = Uri.parse('$baseUrl/login');
     final body = {"email": email, "password": password};
 
     try {
@@ -130,7 +132,7 @@ class LoginController extends GetxController {
     return;
   }
 
-  final url = Uri.parse('https://nexus.heuristictechpark.com/api/v1/logout');
+  final url = Uri.parse('$baseUrl/logout');
 
   try {
     final response = await http.post(

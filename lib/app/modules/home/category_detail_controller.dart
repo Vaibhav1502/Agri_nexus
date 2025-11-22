@@ -6,6 +6,7 @@ import 'package:agri_nexus_ht/app/services/storage_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:agri_nexus_ht/api_config.dart';
 
 class CategoryDetailController extends GetxController {
    final storageService = StorageService();
@@ -47,7 +48,7 @@ class CategoryDetailController extends GetxController {
         print("🚀 Fetching category details for SLUG: $categorySlug");
       final token = await storageService.getToken();
       final response = await http.get(
-        Uri.parse("https://nexus.heuristictechpark.com/api/v1/categories/$categorySlug"),
+        Uri.parse("$baseUrl/categories/$categorySlug"),
          headers: {
           'Accept': 'application/json',
           if (token != null) 'Authorization': 'Bearer $token',

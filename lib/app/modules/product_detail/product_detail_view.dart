@@ -2,11 +2,14 @@
 
 import 'package:agri_nexus_ht/app/data/models/offer_model.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
+import 'package:agri_nexus_ht/app/modules/product_detail/widgets/full_screen_image_gallery.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'product_detail_controller.dart';
+
+import 'package:agri_nexus_ht/api_config.dart';
 
 class ProductDetailView extends StatelessWidget {
   final int productId;
@@ -21,7 +24,9 @@ class ProductDetailView extends StatelessWidget {
   void _onShare(BuildContext context, String productName, int productId) {
     // In a real app, you would create a dynamic link or a URL to your product page.
     // For now, we'll just share the product name and a placeholder link.
-    final String productUrl = "https://nexus.heuristictechpark.com//products/$productId";
+
+    //final String productUrl = "https://nexus.heuristictechpark.com//products/$productId";
+    final String productUrl = "$baseUrl/products/$productId";
     final String shareText = "Check out this amazing product: $productName!\n\n$productUrl";
 
     Share.share(shareText, subject: 'Look what I found!');
@@ -115,7 +120,29 @@ class ProductDetailView extends StatelessWidget {
                 // ),
               ],
                flexibleSpace: FlexibleSpaceBar(
-                background: Obx(() => AnimatedSwitcher(
+                background: Obx(() {
+                 final currentImage = controller.selectedImage.value;
+    return GestureDetector(
+      // 👇 --- ADD THIS ONTAP --- 👇
+      onTap: () {
+        // Create a list of all images (main + gallery)
+        final product = controller.product.value!;
+        final allImages = [product.image, ...product.images]
+            .where((i) => i != null && i.isNotEmpty)
+            .cast<String>()
+            .toList();
+            
+        // Find the index of the currently displayed image
+        final index = allImages.indexOf(currentImage);
+
+        // Navigate to the full screen gallery
+        Get.to(() => FullScreenImageGallery(
+          images: allImages,
+          initialIndex: index >= 0 ? index : 0,
+        ));
+      },
+      
+                child:AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
                       child: Hero(
                         // Use the selectedImage as the key to trigger the animation
@@ -131,7 +158,8 @@ class ProductDetailView extends StatelessWidget {
                           ),
                         ),
                       ),
-                    )),
+                    ));
+                }),
               ),
             ),
             SliverToBoxAdapter(

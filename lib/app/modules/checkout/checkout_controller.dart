@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class CheckoutController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final networkController = Get.find<NetworkController>();
@@ -76,7 +78,7 @@ class CheckoutController extends GetxController {
     isLoading.value = true;
     try {
       final token = await storageService.getToken();
-      final url = Uri.parse("https://nexus.heuristictechpark.com/api/v1/orders");
+      final url = Uri.parse("$baseUrl/orders");
 
       // 3. Construct the request body from the controllers
       final body = {

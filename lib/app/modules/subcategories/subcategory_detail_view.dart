@@ -1,6 +1,7 @@
 // category_detail_view.dart
 
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
+import 'package:agri_nexus_ht/app/modules/home/widgets/add_to_cart_button.dart';
 import 'package:agri_nexus_ht/app/modules/subcategories/subcategory_detail_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
 import 'package:flutter/material.dart';
@@ -158,18 +159,22 @@ class SubcategoryDetailView  extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 8),
                                       // --- Add to Cart Button ---
-                                      SizedBox(
-                                        width: double.infinity,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            cartController.addToCart(product.id);
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(vertical: 8),
-                                          ),
-                                          child: const Text("Add to Cart"),
-                                        ),
-                                      ),
+                                      AddToCartButton(
+  productId: product.id,
+  cartController: cartController,
+),
+                                      // SizedBox(
+                                      //   width: double.infinity,
+                                      //   child: ElevatedButton(
+                                      //     onPressed: () {
+                                      //       cartController.addToCart(product.id);
+                                      //     },
+                                      //     style: ElevatedButton.styleFrom(
+                                      //       padding: const EdgeInsets.symmetric(vertical: 8),
+                                      //     ),
+                                      //     child: const Text("Add to Cart"),
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),

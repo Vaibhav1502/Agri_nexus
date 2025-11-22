@@ -11,7 +11,7 @@ class ProductView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Search Products'),
+        title: const Text('All Products'),
         centerTitle: true,
         //backgroundColor: Colors.green,
       ),
@@ -22,7 +22,7 @@ class ProductView extends StatelessWidget {
             TextField(
               controller: searchController,
               decoration: InputDecoration(
-                hintText: 'Search for products...',
+                hintText: 'Search  products...',
                 filled: true,
                 fillColor: Colors.white,
                 prefixIcon: const Icon(Icons.search),
@@ -30,12 +30,32 @@ class ProductView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    searchController.clear();
+                    // 👇 Reload all products when search is cleared
+                    controller.fetchAllProducts(); 
+                  },
+                ),
               ),
+              
+              onChanged: (value) {
+                // Optional: Search as you type, or keep onSubmitted
+                if (value.isEmpty) {
+                  controller.fetchAllProducts();
+                }
+              },
+        
               onSubmitted: (value) {
                 if (value.isNotEmpty) {
                   controller.searchProducts(value);
+                }else {
+                  controller.fetchAllProducts();
                 }
               },
+
+              
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -45,50 +65,92 @@ class ProductView extends StatelessWidget {
                 }
                 if (controller.products.isEmpty) {
                   return const Center(
-                    child: Text('No products found',
-                        style: TextStyle(fontSize: 16)),
+                    child: Text('No products found', style: TextStyle(fontSize: 16)),
                   );
                 }
-                return ListView.builder(
+                return GridView.builder(
+                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.75,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                  ),
                   itemCount: controller.products.length,
                   itemBuilder: (context, index) {
                     final product = controller.products[index];
-                    return Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        onTap: () {
-                          // Navigate to the product detail page with the product's ID
-                          Get.toNamed('/product-detail', arguments: product.id);
-                        },
-                        leading: product.image != null && product.image!.isNotEmpty
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                  product.image!,
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : const Icon(Icons.agriculture, size: 40),
-                        title: Text(product.name,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16)),
-                        subtitle: Text(
-                          product.description ?? 'No description',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                     return GestureDetector(
+                      onTap: () {
+                        Get.toNamed('/product-detail', arguments: product.id);
+                      },
+                      child: Card(
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        trailing: Text(
-                          product.price != null
-                              ? '₹${product.price!.toStringAsFixed(2)}'
-                              : 'N/A',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 1. Image Section (Expanded to take top space)
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(12)),
+                                child: Image.network(
+                                  product.image ?? '',
+                                  width: double.infinity,
+                                  fit: BoxFit.cover, // Fills the box nicely
+                                  errorBuilder: (c, o, s) => Container(
+                                    color: Colors.grey[200],
+                                    child: const Icon(Icons.image_not_supported,
+                                        color: Colors.grey),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            
+                            // 2. Text Details Section (Bottom part)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Name
+                                  Text(
+                                    product.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  // Description
+                                  Text(
+                                    product.description ?? '',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  // Price
+                                  Text(
+                                    product.price != null
+                                        ? '₹${product.price!.toStringAsFixed(2)}'
+                                        : 'N/A',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );

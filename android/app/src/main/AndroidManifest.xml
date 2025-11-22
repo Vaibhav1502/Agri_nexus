@@ -2,6 +2,15 @@
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+     <!-- 👇 ADD THIS QUERY SECTION 👇 -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
+        </intent>
+    </queries>
+    <!-- 👆 END OF ADDITION 👆 -->
+
     <application
         android:label="agri_nexus_ht"
         android:name="${applicationName}"

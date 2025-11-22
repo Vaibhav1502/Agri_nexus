@@ -3,8 +3,10 @@ import 'package:agri_nexus_ht/app/services/storage_service.dart';
 import 'package:http/http.dart' as http;
 import '../models/product_model.dart';
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class ProductProvider {
-  final String baseUrl = 'https://nexus.heuristictechpark.com/api/v1';
+  
   final storageService = StorageService(); // Get instance
 
   Future<List<Product>> fetchProducts() async {

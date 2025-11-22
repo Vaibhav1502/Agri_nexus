@@ -5,10 +5,12 @@ import 'package:agri_nexus_ht/app/data/models/subcategory_model.dart'; // We can
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class SubcategoryController extends GetxController {
   var isLoading = false.obs;
   var subcategories = <Subcategory>[].obs;
-  final String baseUrl = 'https://nexus.heuristictechpark.com/api/v1/subcategories';
+
 
   @override
   void onInit() {
@@ -23,7 +25,7 @@ class SubcategoryController extends GetxController {
     try {
       isLoading(true);
       print("🚀 Fetching all subcategories...");
-      final response = await http.get(Uri.parse(baseUrl));
+      final response = await http.get(Uri.parse('$baseUrl/subcategories'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

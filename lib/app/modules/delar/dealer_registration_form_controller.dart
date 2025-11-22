@@ -89,7 +89,8 @@ class DealerRegistrationFormController extends GetxController {
       
     } catch (e) {
       // If the error is still "Validation failed", the backend has a specific rule we are breaking.
-      Get.snackbar("Submission Error", e.toString());
+      Get.snackbar("Submission Error", "Something went wrong on server. Please try again later.");
+     // Get.snackbar("Submission Error", e.toString());
       print("❌ Backend Error: $e");
     } finally {
       isLoading.value = false;

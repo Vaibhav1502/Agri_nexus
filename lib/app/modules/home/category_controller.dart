@@ -4,13 +4,12 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:agri_nexus_ht/api_config.dart';
 
 class CategoryController extends GetxController {
    final networkController = Get.find<NetworkController>();
   var categories = <Category>[].obs;
   var isLoading = false.obs;
-
-  final String baseUrl = 'https://nexus.heuristictechpark.com/api/v1/categories';
 
   @override
   void onInit() {
@@ -38,7 +37,7 @@ class CategoryController extends GetxController {
 
     try {
       isLoading(true);
-      final response = await http.get(Uri.parse(baseUrl));
+      final response = await http.get(Uri.parse('$baseUrl/categories'),);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

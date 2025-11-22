@@ -4,8 +4,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../services/storage_service.dart';
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class DealerProvider {
-  final String baseUrl = 'https://nexus.heuristictechpark.com/api/v1';
   final storageService = StorageService();
 
   Future<void> submitDealerRegistration(Map<String, dynamic> details) async {

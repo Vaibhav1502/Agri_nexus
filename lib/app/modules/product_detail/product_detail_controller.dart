@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import '../../data/models/product_model.dart';
 import '../../data/providers/product_detail_provider.dart';
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class ProductDetailController extends GetxController {
   final _provider = ProductDetailProvider();
   final authController = Get.find<AuthController>(); // 👈 GET an instance
@@ -59,7 +61,7 @@ class ProductDetailController extends GetxController {
    Future<void> fetchOffersForProduct(int productId) async {
     try {
       print("🚀 Fetching offers for product ID: $productId");
-      final url = Uri.parse("https://nexus.heuristictechpark.com/api/v1/offers/product/$productId");
+      final url = Uri.parse("$baseUrl/offers/product/$productId");
       final response = await http.get(url);
 
       if (response.statusCode == 200) {

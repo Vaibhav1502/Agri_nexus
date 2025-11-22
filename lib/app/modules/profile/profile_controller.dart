@@ -4,6 +4,7 @@ import 'package:agri_nexus_ht/app/services/storage_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:agri_nexus_ht/api_config.dart';
 
 class ProfileController extends GetxController {
   final storageService = StorageService();
@@ -15,8 +16,6 @@ class ProfileController extends GetxController {
   // Explicitly declare the type of the observable Map.
   var userProfile = RxMap<String, dynamic>({});
   // 👆 --- END OF FIX --- 👆
-
-  final String baseUrl = 'https://nexus.heuristictechpark.com/api/v1';
 
   // This method will now work without any type errors.
   Future<void> fetchAndUpdateUserProfile() async {

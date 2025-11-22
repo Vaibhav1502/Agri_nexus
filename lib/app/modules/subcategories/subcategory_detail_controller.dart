@@ -8,6 +8,8 @@ import 'package:agri_nexus_ht/app/services/storage_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class SubcategoryDetailController extends GetxController {
   final storageService = StorageService();
   final authController = Get.find<AuthController>();
@@ -43,7 +45,7 @@ class SubcategoryDetailController extends GetxController {
       
       // 👇 --- THIS IS THE ONLY MAJOR CHANGE --- 👇
       // Point to the new subcategories endpoint
-      final url = Uri.parse("https://nexus.heuristictechpark.com/api/v1/subcategories/$subcategorySlug");
+      final url = Uri.parse("$baseUrl/subcategories/$subcategorySlug");
       // 👆 --- END OF CHANGE --- 👆
       
       final response = await http.get(

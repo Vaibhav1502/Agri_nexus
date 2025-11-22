@@ -85,7 +85,7 @@ class OrderView extends StatelessWidget {
 
                         // --- TITLE: Order Number ---
                         title: Text(
-                          "Order #${order.orderNumber}",
+                          "Order :- ${order.orderNumber}",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,

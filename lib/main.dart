@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
        navigatorKey: navigatorKey,
-      title: 'Nexus Agriculture',
+      title: 'Green Leaf',
       theme: AppTheme.lightTheme,
       // The initial route will now be handled by the SplashController logic
       initialRoute: AppRoutes.splash, 

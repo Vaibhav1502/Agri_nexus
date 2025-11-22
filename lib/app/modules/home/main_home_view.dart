@@ -118,9 +118,9 @@ class MainHomeView extends StatelessWidget {
                   label: 'Home',
                 ),
                 const BottomNavigationBarItem(
-                  icon: Icon(Icons.search_outlined),
-                  activeIcon: Icon(Icons.search),
-                  label: 'Search',
+                  icon: Icon(Icons.dashboard_customize_outlined),
+                  activeIcon: Icon(Icons.dashboard),
+                  label: 'Products',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.favorite_border),

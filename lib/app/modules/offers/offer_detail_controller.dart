@@ -5,18 +5,20 @@ import 'package:agri_nexus_ht/app/data/models/offer_model.dart'; // We can reuse
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class OfferDetailController extends GetxController {
   var isLoading = false.obs;
   var offer = Rxn<Offer>(); // Observable for a single Offer object
 
-  final String baseUrl = 'https://nexus.heuristictechpark.com/api/v1/offers';
+  //final String baseUrl = 'https://nexus.heuristictechpark.com/api/v1/offers';
 
   /// Fetches details for a specific offer by its ID
   Future<void> fetchOfferDetail(int offerId) async {
     isLoading.value = true;
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/$offerId'),
+        Uri.parse('$baseUrl/offers/$offerId'),
       );
 
       final data = json.decode(response.body);

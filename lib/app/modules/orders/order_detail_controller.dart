@@ -6,12 +6,12 @@ import 'package:agri_nexus_ht/app/services/storage_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class OrderDetailController extends GetxController {
   final storageService = StorageService();
   var isLoading = false.obs;
   var order = Rxn<Order>(); // Observable for a single Order object
-
-  final String baseUrl = 'https://nexus.heuristictechpark.com/api/v1/orders';
 
   /// Fetches details for a specific order by its order number
   Future<void> fetchOrderDetail(String orderNumber) async {
@@ -25,7 +25,7 @@ class OrderDetailController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/$orderNumber'),
+        Uri.parse('$baseUrl/orders/$orderNumber'),
         headers: {'Authorization': 'Bearer $token'},
       );
 

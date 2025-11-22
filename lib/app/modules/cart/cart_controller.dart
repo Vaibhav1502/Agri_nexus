@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../services/storage_service.dart';
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class CartController extends GetxController {
   final storageService = StorageService();
 
@@ -37,7 +39,8 @@ class CartController extends GetxController {
       }
 
       final response = await http.get(
-        Uri.parse("https://nexus.heuristictechpark.com/api/v1/cart"),
+        Uri.parse('$baseUrl/cart'), 
+      
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
@@ -95,7 +98,7 @@ class CartController extends GetxController {
       // Note: This is inefficient. A single backend call for the whole cart is better.
       // We are iterating through each item and calling the API.
       for (var item in cartItems) {
-        final url = Uri.parse("https://nexus.heuristictechpark.com/api/v1/offers/calculate-discount");
+        final url = Uri.parse('$baseUrl/offers/calculate-discount');
         final body = {
           "product_id": item['product_id'],
           "quantity": item['quantity'],
@@ -152,7 +155,7 @@ class CartController extends GetxController {
       }
 
       final response = await http.post(
-        Uri.parse("https://nexus.heuristictechpark.com/api/v1/cart/add"),
+        Uri.parse("$baseUrl/cart/add"),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/json",
@@ -220,7 +223,7 @@ class CartController extends GetxController {
       }
 
       final response = await http.put(
-        Uri.parse("https://nexus.heuristictechpark.com/api/v1/cart/update"),
+        Uri.parse("$baseUrl/cart/update"),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/json",
@@ -286,7 +289,7 @@ class CartController extends GetxController {
     final token = await storageService.getToken(); // get auth token
 
     final response = await http.delete(
-      Uri.parse("https://nexus.heuristictechpark.com/api/v1/cart/remove/$productId"),
+      Uri.parse("$baseUrl/cart/remove/$productId"),
       headers: {
         "Accept": "application/json",
         if (token != null) "Authorization": "Bearer $token",
@@ -348,7 +351,7 @@ Future<void> clearCart() async {
     final token = await storageService.getToken(); // get auth token if needed
 
     final response = await http.delete(
-      Uri.parse("https://nexus.heuristictechpark.com/api/v1/cart/clear"),
+      Uri.parse("$baseUrl/cart/clear"),
       headers: {
         "Accept": "application/json",
         if (token != null) "Authorization": "Bearer $token",
@@ -435,5 +438,18 @@ Future<void> clearCart() async {
 //   }
  
 // }
+
+int getProductQuantity(int productId) {
+    // Look for the item in the list
+    final item = cartItems.firstWhereOrNull(
+      (element) => element['product_id'] == productId
+    );
+    
+    // If found, return its quantity, otherwise return 0
+    if (item != null) {
+      return item['quantity'] ?? 0;
+    }
+    return 0;
+  }
    
 }

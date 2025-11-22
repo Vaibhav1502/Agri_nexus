@@ -5,6 +5,7 @@ import 'package:agri_nexus_ht/app/modules/home/category_controller.dart';
 import 'package:agri_nexus_ht/app/modules/home/featured_product_controller.dart';
 import 'package:agri_nexus_ht/app/modules/cart/cart_controller.dart';
 import 'package:agri_nexus_ht/app/modules/home/offer_controller.dart';
+import 'package:agri_nexus_ht/app/modules/home/widgets/add_to_cart_button.dart';
 import 'package:agri_nexus_ht/app/modules/home/widgets/pending_approval_banner.dart';
 import 'package:agri_nexus_ht/app/modules/profile/profile_controller.dart';
 import 'package:agri_nexus_ht/app/modules/wishlist/wishlist_controller.dart';
@@ -56,15 +57,47 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          
-          onPressed: (){}, 
-          icon: Image.asset(  
-            'assets/logo.png',scale: 1,)),
+        
+         leadingWidth: 77, // 1. Increase the allowed width for the leading widget
+  leading: Padding(
+    padding: const EdgeInsets.all(8.0), // Add a little padding
+    child: Image.asset(
+      'assets/logo.png',
+      fit: BoxFit.contain, // Ensure it fits within the box
+    ),
+  ),
         title: const Text("Green Leaf",style: TextStyle(fontSize: 30),),
         centerTitle: true,
         //backgroundColor: Colors.green,
         elevation: 0,
+        actions: [
+  Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: IconButton(
+      icon: const Icon(Icons.call),
+      onPressed: () async {
+        // 1. Create the URI
+        final Uri launchUri = Uri(
+          scheme: 'tel',
+          path: '+918295282656',
+        );
+
+        // 2. Launch the dialer
+        try {
+          if (await canLaunchUrl(launchUri)) {
+            await launchUrl(launchUri);
+          } else {
+            // Fallback if dialer cannot be opened
+            throw 'Could not launch dialer';
+          }
+        } catch (e) {
+          // Using GetX for snackbar if you have it
+          Get.snackbar("Error", "Could not open dialer.");
+        }
+      },
+    ),
+  ),
+],
         //   actions: [
         //   PopupMenuButton<String>(
         //     icon: const Icon(Icons.more_vert), // The three-dot icon
@@ -439,20 +472,24 @@ class HomeView extends StatelessWidget {
                                               style: const TextStyle(color: Colors.red, fontSize: 12),
                                             ),
                                             const SizedBox(height: 8),
-                                            SizedBox(
-                                              width: double.infinity,
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  cartController.addToCart(product.id, quantity: 1);
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                 // backgroundColor: Colors.green,
-                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                                  padding: const EdgeInsets.symmetric(vertical: 10),
-                                                ),
-                                                child: const Text("Add to Cart", style: TextStyle(color: Colors.white, fontSize: 14)),
-                                              ),
-                                            ),
+                                            AddToCartButton(
+  productId: product.id,
+  cartController: cartController,
+),
+                                            // SizedBox(
+                                            //   width: double.infinity,
+                                            //   child: ElevatedButton(
+                                            //     onPressed: () {
+                                            //       cartController.addToCart(product.id, quantity: 1);
+                                            //     },
+                                            //     style: ElevatedButton.styleFrom(
+                                            //      // backgroundColor: Colors.green,
+                                            //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                            //       padding: const EdgeInsets.symmetric(vertical: 10),
+                                            //     ),
+                                            //     child: const Text("Add to Cart", style: TextStyle(color: Colors.white, fontSize: 14)),
+                                            //   ),
+                                            // ),
                                           ],
                                         ),
                                       ),
@@ -599,20 +636,24 @@ class HomeView extends StatelessWidget {
                                             ],
                                           ),
                                           const SizedBox(height: 8),
-                                          SizedBox(
-                                            width: double.infinity,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                cartController.addToCart(product.id, quantity: 1);
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                //backgroundColor: Colors.green,
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                              ),
-                                              child: const Text("Add to Cart", style: TextStyle(color: Colors.white, fontSize: 14)),
-                                            ),
-                                          ),
+                                          AddToCartButton(
+  productId: product.id,
+  cartController: cartController,
+),
+                                          // SizedBox(
+                                          //   width: double.infinity,
+                                          //   child: ElevatedButton(
+                                          //     onPressed: () {
+                                          //       cartController.addToCart(product.id, quantity: 1);
+                                          //     },
+                                          //     style: ElevatedButton.styleFrom(
+                                          //       //backgroundColor: Colors.green,
+                                          //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                          //       padding: const EdgeInsets.symmetric(vertical: 10),
+                                          //     ),
+                                          //     child: const Text("Add to Cart", style: TextStyle(color: Colors.white, fontSize: 14)),
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     ),

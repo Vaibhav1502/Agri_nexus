@@ -4,15 +4,15 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class WishlistController extends GetxController {
    final storageService = StorageService();
   //final storage = const FlutterSecureStorage();
 
   var isLoading = false.obs;
   var wishlistItems = [].obs;
-  
 
-  final String baseUrl = 'https://nexus.heuristictechpark.com/api/v1';
 
   /// ✅ Fetch Wishlist
   Future<void> fetchWishlist() async {

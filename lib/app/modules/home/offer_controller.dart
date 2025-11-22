@@ -9,14 +9,14 @@ import 'package:agri_nexus_ht/app/services/storage_service.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:agri_nexus_ht/api_config.dart';
+
 class OfferController extends GetxController {
   final networkController = Get.find<NetworkController>();
   final authController = Get.find<AuthController>();
 
   var isLoading = false.obs;
   var offers = <Offer>[].obs;
-
-  final String baseUrl = 'https://nexus.heuristictechpark.com/api/v1/offers';
 
   @override
   void onInit() {
@@ -37,7 +37,7 @@ class OfferController extends GetxController {
       print("🚀 Fetching offers...");
        final token = await Get.find<StorageService>().getToken();
 
-      final response = await http.get(Uri.parse(baseUrl),
+      final response = await http.get(Uri.parse('$baseUrl/offers'),
        headers: {
           'Accept': 'application/json',
           if (token != null) 'Authorization': 'Bearer $token',
